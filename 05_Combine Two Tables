@@ -26,6 +26,8 @@ Write a SQL query for a report that provides the following information for each 
 FirstName, LastName, City, State
 */
 
+
+-- [METHOD 1]
 SELECT P.FIRSTNAME, 
        P.LASTNAME, 
        A.CITY, 
@@ -34,6 +36,7 @@ FROM PERSON P LEFT OUTER JOIN ADDRESS A  --ANSI
 ON P.PERSONID = A.PERSONID
 
 
+-- [METHOD 2]
 SELECT P.FIRSTNAME, 
        P.LASTNAME, 
        A.CITY, 
