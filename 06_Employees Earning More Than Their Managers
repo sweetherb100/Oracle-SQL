@@ -29,9 +29,7 @@ AND E.Salary > M.Salary
 1) E.ManagerId IS NOT NULL : is not needed
 => when searching COLUMN_NAME='ABC', 
 if the data is NULL, it will not be selected (NULL is excluded automatically)
-
 2) E.ManagerId != NULL (X)
-
 3) don't need outer join
 => don't have to consider when there is no manager (i.e. itself is manager)
 */
