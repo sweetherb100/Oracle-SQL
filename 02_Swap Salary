@@ -22,13 +22,13 @@ After running your update statement, the above salary table should have the foll
 | 4  | D    | m   | 500    |
 */
 
-/*method1 */
+-- [METHOD 1]
 UPDATE SALARY S
 SET S.SEX = DECODE(S.SEX, 'm','f', 'm')
 
 
 
-/*method2 */
+-- [METHOD 2]
 UPDATE salary
 SET sex = 
 CASE
