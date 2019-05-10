@@ -40,8 +40,17 @@ GROUP BY class
 HAVING COUNT(class) >= 5
 */
 
+--[METHOD 1]
 SELECT class
 FROM (SELECT DISTINCT student, class
       FROM courses)
+GROUP BY class
+HAVING COUNT(class) >= 5
+
+--[METHOD 2]
+SELECT class
+FROM (SELECT student, class
+      FROM courses 
+      GROUP BY student, class)
 GROUP BY class
 HAVING COUNT(class) >= 5
