@@ -27,7 +27,7 @@ FirstName, LastName, City, State
 */
 
 
--- [METHOD 1]
+--[METHOD 1]
 SELECT P.FIRSTNAME, 
        P.LASTNAME, 
        A.CITY, 
