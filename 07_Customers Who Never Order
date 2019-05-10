@@ -37,9 +37,10 @@ WHERE 1=1
 AND C.Id = O.CustomerId  (+)
 AND O.CustomerId IS NULL
 
+
 --[METHOD 2] USE "NOT IN" (or "NOT EXISTS")
 SELECT C.Name AS Customers
 FROM Customers C
 WHERE 1=1
 AND C.Id NOT IN (SELECT E.customerid 
-                 from Orders E )
+                 FROM Orders E )
