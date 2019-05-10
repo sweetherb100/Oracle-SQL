@@ -40,14 +40,14 @@ GROUP BY class
 HAVING COUNT(class) >= 5
 */
 
---[METHOD 1]
+--[METHOD 1] DISTINCT: doesn't sort
 SELECT class
 FROM (SELECT DISTINCT student, class
       FROM courses)
 GROUP BY class
 HAVING COUNT(class) >= 5
 
---[METHOD 2]
+--[METHOD 2] GROUP BY: sort
 SELECT class
 FROM (SELECT student, class
       FROM courses 
