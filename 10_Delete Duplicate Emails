@@ -40,3 +40,15 @@ WHERE ID NOT IN (
                         GROUP BY P.EMAIL
                        ) A
                   )
+
+
+--[REFERENCE] DOESN'T WORK!!
+-- => it is because I am asking to delete while I am referencing to my own table
+-- => so I need to make it into temp table, therefore need temp table A
+
+DELETE FROM Person
+WHERE Id NOT IN (
+                SELECT MIN(Id) AS Id
+                FROM Person
+                GROUP BY Email
+                )
