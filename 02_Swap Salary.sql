@@ -21,6 +21,16 @@ After running your update statement, the above salary table should have the foll
 | 3  | C    | f   | 5500   |
 | 4  | D    | m   | 500    |
 */
+CREATE TABLE salary(id int, name varchar(100), sex char(1), salary int);
+TRUNCATE TABLE salary;
+INSERT ALL 
+INTO salary (id, name, sex, salary) VALUES ('1', 'A', 'm', '2500')
+INTO salary (id, name, sex, salary) VALUES ('2', 'B', 'f', '1500')
+INTO salary (id, name, sex, salary) VALUES ('3', 'C', 'm', '5500')
+INTO salary (id, name, sex, salary) VALUES ('4', 'D', 'f', '500')
+SELECT * FROM DUAL;
+
+SELECT * FROM salary;
 
 -- [METHOD 1]
 UPDATE SALARY S

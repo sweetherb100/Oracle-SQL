@@ -26,6 +26,14 @@ Write a SQL query for a report that provides the following information for each 
 FirstName, LastName, City, State
 */
 
+DROP TABLE Person;
+CREATE TABLE Person (PersonId int, FirstName varchar(255), LastName varchar(255));
+CREATE TABLE Address (AddressId int, PersonId int, City varchar(255), State varchar(255));
+TRUNCATE TABLE Person;
+INSERT INTO Person (PersonId, LastName, FirstName) VALUES ('1', 'Wang', 'Allen');
+TRUNCATE TABLE Address;
+INSERT INTO Address (AddressId, PersonId, City, State) VALUES ('1', '2', 'New York City', 'New York');
+
 
 --[METHOD 1]
 SELECT P.FIRSTNAME, 
@@ -33,7 +41,7 @@ SELECT P.FIRSTNAME,
        A.CITY, 
        A.STATE
 FROM PERSON P LEFT OUTER JOIN ADDRESS A  --ANSI
-ON P.PERSONID = A.PERSONID
+ON P.PERSONID = A.PERSONID;
 
 
 -- [METHOD 2]
@@ -43,7 +51,7 @@ SELECT P.FIRSTNAME,
        A.STATE
 FROM PERSON  P, ADDRESS A
 WHERE 1=1
-AND P.PERSONID = A.PERSONID (+)  --ORACLE BASE
+AND P.PERSONID = A.PERSONID (+);  --ORACLE BASE
    
 /* PERSONID OF ADDRESS is not a pk so it can be null
 => need to outer join with PERSON table

@@ -27,6 +27,16 @@ For example, return the following Ids for the above Weather table:
 +----+
 */
 
+CREATE TABLE Weather (Id int, RecordDate date, Temperature int);
+TRUNCATE TABLE Weather;
+INSERT ALL
+INTO Weather (Id, RecordDate, Temperature) VALUES ('1', '2015-01-01', '10')
+INTO Weather (Id, RecordDate, Temperature) VALUES ('2', '2015-01-02', '25')
+INTO Weather (Id, RecordDate, Temperature) VALUES ('3', '2015-01-03', '20')
+INTO Weather (Id, RecordDate, Temperature) VALUES ('4', '2015-01-04', '30')
+SELECT * FROM DUAL;
+
+
 --[METHOD 1]
 SELECT B.Id
 FROM Weather A, Weather B

@@ -18,12 +18,27 @@ Given the Employee table, write a SQL query that finds out employees who earn mo
 +----------+
 */
 
+CREATE TABLE Employee (Id int, Name varchar(255), Salary int, ManagerId int);
+TRUNCATE TABLE Employee;
+
+INSERT ALL
+INTO Employee (Id, Name, Salary, ManagerId) VALUES ('1', 'Joe', '70000', '3')
+INTO Employee (Id, Name, Salary, ManagerId) VALUES ('2', 'Henry', '80000', '4')
+INTO Employee (Id, Name, Salary) VALUES ('3', 'Sam', '60000')
+INTO Employee (Id, Name, Salary) VALUES ('4', 'Max', '90000')
+SELECT * FROM DUAL;
+SELECT * FROM Employee;
+
+SELECT *
+FROM Employee E, Employee M --Employee and Manager
+WHERE E.ManagerId = M.Id (+); --Id of the Manager tablecan be null
+
+
 -- [METHOD 1]
 SELECT E.Name AS Employee
 FROM Employee E, Employee M
 WHERE 1=1
-AND E.ManagerId= M.Id (+) --OUTER JOIN
---AND E.ManagerId IS NOT NULL
+AND E.ManagerId= M.Id (+) --Id of the Manager tablecan be null
 AND E.Salary > M.Salary
 /*
 1) E.ManagerId IS NOT NULL : is not needed
