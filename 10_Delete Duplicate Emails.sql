@@ -23,12 +23,25 @@ Your output is the whole Person table after executing your sql. Use delete state
 
 */
 
---[MYSQL]
+DROP TABLE Person;
+CREATE TABLE Person (Id int, Email varchar(255));
+TRUNCATE TABLE Person;
+
+INSERT ALL
+INTO Person (Id, Email) VALUES ('1', 'john@example.com')
+INTO Person (Id, Email) VALUES ('2', 'bob@example.com')
+INTO Person (Id, Email) VALUES ('3', 'john@example.com')
+SELECT * FROM DUAL;
+SELECT * FROM Person;
+
+
+
+--[MYSQL] BUT IT IS NOT POSSIBLE IN ORACLE SO IN THE END, NOT RECOMMENDED!!
 -- join forces you to use "DELETE A FROM TABLE A, TABLE B" 
 DELETE A --join forces you to use like this way
 FROM Person A, Person B
 WHERE A.Email=B.Email --self-join
-AND A.Id > B.Id
+AND A.Id > B.Id;
 
 --[ORACLE]
 DELETE FROM PERSON
@@ -38,7 +51,7 @@ WHERE ID NOT IN (
                         SELECT MIN(P.ID) ID --CAN USE MIN BECAUSE I USED GROUP BY!!
                         FROM PERSON P
                         GROUP BY P.EMAIL
-                       ) A
+                       ) A --temp table
                   )
 
 

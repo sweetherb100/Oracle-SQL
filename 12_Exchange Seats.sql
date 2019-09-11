@@ -1,21 +1,8 @@
 /*
-Create table If Not Exists seat(id int, student varchar(255))
-Truncate table seat
-insert into seat (id, student) values ('1', 'Abbot')
-insert into seat (id, student) values ('2', 'Doris')
-insert into seat (id, student) values ('3', 'Emerson')
-insert into seat (id, student) values ('4', 'Green')
-insert into seat (id, student) values ('5', 'Jeames')
-
-
 Mary is a teacher in a middle school and she has a table seat storing students' names and their corresponding seat ids.
-
 The column id is continuous increment.
- 
-
 Mary wants to change seats for the adjacent students.
  
-
 Can you write a SQL query to output the result for Mary?
  
 
@@ -43,6 +30,18 @@ For the sample input, the output is:
 Note:
 If the number of students is odd, there is no need to change the last one's seat.
 */
+
+CREATE TABLE seat(id int, student varchar(255));
+TRUNCATE TABLE seat;
+INSERT ALL
+INTO seat (id, student) VALUES ('1', 'Abbot')
+INTO seat (id, student) VALUES ('2', 'Doris')
+INTO seat (id, student) VALUES ('3', 'Emerson')
+INTO seat (id, student) VALUES ('4', 'Green')
+INTO seat (id, student) VALUES ('5', 'Jeames')
+SELECT * FROM DUAL;
+SELECT * FROM SEAT;
+
 
 
 --[METHOD 1]
