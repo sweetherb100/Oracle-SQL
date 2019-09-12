@@ -1,5 +1,8 @@
 /*
-Write a SQL query to rank scores. If there is a tie between two scores, both should have the same ranking. Note that after a tie, the next ranking number should be the next consecutive integer value. In other words, there should be no "holes" between ranks.
+Write a SQL query to rank scores. 
+If there is a tie between two scores, both should have the same ranking. 
+Note that after a tie, the next ranking number should be the next consecutive integer value. 
+In other words, there should be no "holes" between ranks.
 
 +----+-------+
 | Id | Score |
@@ -41,4 +44,10 @@ SELECT * FROM SCORES;
 SELECT ROUND(SCORE,2) AS SCORE, --I NEEED TO WRITE ROUND TO GET SUCCESS BUT DONT KNOW WHY
 DENSE_RANK() OVER(ORDER BY SCORE DESC) AS RANK
 FROM SCORES
-ORDER BY SCORE DESC
+ORDER BY SCORE DESC;
+
+
+SELECT ROUND(SCORE,2) AS SCORE, --I NEEED TO WRITE ROUND TO GET SUCCESS BUT DONT KNOW WHY
+RANK() OVER(ORDER BY SCORE DESC) AS RANK
+FROM SCORES
+ORDER BY SCORE DESC;

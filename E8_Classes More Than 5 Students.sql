@@ -45,7 +45,7 @@ INTO courses (student, class) VALUES ('G', 'Math')
 INTO courses (student, class) VALUES ('H', 'Math')
 INTO courses (student, class) VALUES ('I', 'Math')
 SELECT * FROM DUAL;
-
+SELECT * FROM COURSES;
 
 --WRONG: There could be same 2 students!
 SELECT class
