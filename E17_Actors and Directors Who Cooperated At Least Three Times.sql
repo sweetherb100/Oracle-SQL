@@ -45,3 +45,9 @@ INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('2', '1', '5')
 INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('2', '1', '6')
 SELECT * FROM DUAL;
 SELECT * FROM ActorDirector;
+
+SELECT ACTOR_ID,
+DIRECTOR_ID
+FROM ActorDirector
+GROUP BY ACTOR_ID, DIRECTOR_ID
+HAVING COUNT(ACTOR_ID) >= 3;

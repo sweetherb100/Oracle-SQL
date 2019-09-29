@@ -49,3 +49,14 @@ INTO Views (article_id, author_id, viewer_id , view_date) VALUES ('3', '4', '4',
 INTO Views (article_id, author_id, viewer_id , view_date) VALUES ('3', '4', '4', TO_DATE('2019-07-21','YYYY-MM-DD')) 
 SELECT * FROM DUAL;
 SELECT * FROM Views;
+
+SELECT AUTHOR_ID ID --JUST UNTIL HERE IS WRONG
+FROM VIEWS
+WHERE AUTHOR_ID = VIEWER_ID
+ORDER BY AUTHOR_ID;
+
+
+SELECT DISTINCT(AUTHOR_ID) ID
+FROM VIEWS
+WHERE AUTHOR_ID = VIEWER_ID
+ORDER BY AUTHOR_ID;

@@ -10,7 +10,8 @@
 |    5 | Zack |         1 |
 |    6 | Mark |         2 |
 +------+------+-----------+
-Write a query to return the list of customers NOT referred by the person with id ��2��.
+
+Write a query to return the list of customers NOT referred by the person with id '2'.
 
 For the sample data above, the result is:
 
@@ -35,3 +36,12 @@ INTO customer (id, name, referee_id) VALUES ('5', 'Zack', '1')
 INTO customer (id, name, referee_id) VALUES ('6', 'Mark', '2') 
 SELECT * FROM DUAL;
 SELECT * FROM customer;
+
+SELECT NAME
+FROM CUSTOMER
+WHERE REFEREE_ID != '2'; --BE CAREFUL! IT ALSO ELMINATES THE ONES WITH NULL
+
+SELECT NAME
+FROM CUSTOMER
+WHERE REFEREE_ID != '2' OR REFEREE_ID IS NULL; --I WAS STUPID TO WRITE AT FIST IS NOT NULL...
+

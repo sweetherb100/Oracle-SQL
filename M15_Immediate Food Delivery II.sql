@@ -1,0 +1,119 @@
+/*table: delivery
++-----------------------------+---------+
+| column name                 | type    |
++-----------------------------+---------+
+| delivery_id                 | int     |
+| customer_id                 | int     |
+| order_date                  | date    |
+| customer_pref_delivery_date | date    |
++-----------------------------+---------+
+delivery_id is the primary key of this table.
+the table holds information about food delivery to customers that make orders at some date 
+and specify a preferred delivery date (on the same order date or after it).
+
+If the preferred delivery date of the customer is the same as the order date 
+then the order is called 'immediate' otherwise it's called 'scheduled'.
+
+The first order of a customer is the order with the earliest order date that customer made.
+
+Write an sql query to find the percentage of immediate orders in the first orders of all customers, rounded to 2 decimal places.
+
+The query result format is in the following example:
+
+delivery table:
++-------------+-------------+------------+-----------------------------+
+| delivery_id | customer_id | order_date | customer_pref_delivery_date |
++-------------+-------------+------------+-----------------------------+
+| 1           | 1           | 2019-08-01 | 2019-08-02                  |
+| 2           | 2           | 2019-08-02 | 2019-08-02                  |
+| 3           | 1           | 2019-08-11 | 2019-08-12                  |
+| 4           | 3           | 2019-08-24 | 2019-08-24                  |
+| 5           | 3           | 2019-08-21 | 2019-08-22                  |
+| 6           | 2           | 2019-08-11 | 2019-08-13                  |
+| 7           | 4           | 2019-08-09 | 2019-08-09                  |
++-------------+-------------+------------+-----------------------------+
+
+result table:
++----------------------+
+| immediate_percentage |
++----------------------+
+| 50.00                |
++----------------------+
+the customer id 1 has a first order with delivery id 1 and it is scheduled.
+the customer id 2 has a first order with delivery id 2 and it is immediate.
+the customer id 3 has a first order with delivery id 5 and it is scheduled.
+the customer id 4 has a first order with delivery id 7 and it is immediate.
+hence, half the customers have immediate first orders.*/
+
+DROP TABLE delivery;
+CREATE TABLE delivery (delivery_id int, customer_id int, order_date date, customer_pref_delivery_date date);
+TRUNCATE TABLE delivery;
+INSERT ALL
+INTO delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) VALUES ('1', '1', TO_DATE('2019-08-01','YYYY-MM-DD'), TO_DATE('2019-08-02','YYYY-MM-DD'))
+INTO delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) VALUES ('2', '2', TO_DATE('2019-08-02','YYYY-MM-DD'), TO_DATE('2019-08-02','YYYY-MM-DD'))
+INTO delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) VALUES ('3', '1', TO_DATE('2019-08-11','YYYY-MM-DD'), TO_DATE('2019-08-12','YYYY-MM-DD'))
+INTO delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) VALUES ('4', '3', TO_DATE('2019-08-24','YYYY-MM-DD'), TO_DATE('2019-08-24','YYYY-MM-DD'))
+INTO delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) VALUES ('5', '3', TO_DATE('2019-08-21','YYYY-MM-DD'), TO_DATE('2019-08-22','YYYY-MM-DD'))
+INTO delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) VALUES ('6', '2', TO_DATE('2019-08-11','YYYY-MM-DD'), TO_DATE('2019-08-13','YYYY-MM-DD'))
+INTO delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) VALUES ('7', '4', TO_DATE('2019-08-09','YYYY-MM-DD'), TO_DATE('2019-08-09','YYYY-MM-DD'))
+SELECT * FROM DUAL;
+SELECT * FROM delivery;
+
+SELECT customer_id,
+MIN(order_date) MIN_DATE
+FROM DELIVERY
+GROUP by customer_id;
+
+
+--WRONG(1): because i cut rows by where clause
+SELECT COUNT(D.customer_id)/COUNT(T.customer_id)
+FROM delivery D,
+(
+SELECT customer_id,
+MIN(order_date) MIN_DATE
+FROM DELIVERY
+GROUP by customer_id
+) T,
+(
+SELECT count(DISTINCT customer_id) TOT_CNT
+FROM delivery
+)
+TT
+WHERE d.customer_id = T.customer_id
+AND T.min_date = d.customer_pref_delivery_date;
+
+--WRONG(2): grammatically, this is not possible
+-- I know TOT_CNT is only 1 row but it might not, so oracle is not allowing this! 
+-- Have to use with group function
+SELECT COUNT(D.customer_id)/TT.TOT_CNT
+FROM delivery D,
+(
+SELECT customer_id,
+MIN(order_date) MIN_DATE
+FROM DELIVERY
+GROUP by customer_id
+) T,
+(
+SELECT count(DISTINCT customer_id) TOT_CNT
+FROM delivery
+)
+TT
+WHERE d.customer_id = T.customer_id
+AND T.min_date = d.customer_pref_delivery_date;
+
+-- FINAL: alternative is to use MAX or MIN in select clause to use group function
+SELECT COUNT(D.customer_id)/MAX(TT.tot_cnt)
+FROM delivery D,
+(
+SELECT customer_id,
+MIN(order_date) MIN_DATE
+FROM DELIVERY
+GROUP by customer_id
+) T,
+(
+SELECT count(DISTINCT customer_id) TOT_CNT
+FROM delivery
+)
+TT
+WHERE d.customer_id = T.customer_id
+AND T.min_date = d.customer_pref_delivery_date;
