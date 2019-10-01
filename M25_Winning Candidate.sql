@@ -21,6 +21,7 @@ Table: Vote
 +-----+--------------+
 id is the auto-increment primary key,
 CandidateId is the id appeared in Candidate table.
+
 Write a sql to find the name of the winning candidate, the above example will return the winner B.
 
 +------+
@@ -54,3 +55,24 @@ INTO Vote (id, CandidateId) VALUES ('4', '2')
 INTO Vote (id, CandidateId) VALUES ('5', '5')
 SELECT * FROM DUAL;
 SELECT * FROM Vote;
+
+SELECT CandidateId,
+count(CandidateId) cnt_can_id
+FROM vote
+GROUP BY CandidateId
+HAVING count(candidateId) = (SELECT max(count(CandidateId)) -- this cannot be used with CandidateId 
+							FROM vote 
+							GROUP BY CandidateId);
+
+SELECT C.name
+FROM Candidate C,
+(
+SELECT CandidateId,
+count(CandidateId) cnt_can_id
+FROM vote
+GROUP BY CandidateId
+HAVING count(candidateId) = (SELECT max(count(CandidateId)) -- this cannot be used with CandidateId 
+							FROM vote 
+							GROUP BY CandidateId)
+) V
+WHERE C.id = V.CandidateId

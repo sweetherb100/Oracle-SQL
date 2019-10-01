@@ -48,3 +48,25 @@ INTO Bonus (empId, bonus) VALUES ('2', '500')
 INTO Bonus (empId, bonus) VALUES ('4', '2000')
 SELECT * FROM DUAL;
 SELECT * FROM Bonus;
+
+SELECT empId,
+name
+FROM Employee
+WHERE empId NOT IN (SELECT empId
+						FROM Bonus
+						WHERE bonus >=1000);
+
+
+SELECT EE.name,
+B.bonus
+FROM Bonus B,
+(
+SELECT empId,
+name
+FROM Employee
+WHERE empId NOT IN (SELECT empId
+						FROM Bonus
+						WHERE bonus >=1000)
+) EE
+WHERE EE.EmpId = B.EmpId (+);
+					

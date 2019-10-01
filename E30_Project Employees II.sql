@@ -17,6 +17,7 @@ Table: Employee
 | experience_years | int     |
 +------------------+---------+
 employee_id is the primary key of this table.
+
 Write an SQL query that reports all the projects that have the most employees.
 
 The query result format is in the following example:
@@ -63,7 +64,7 @@ SELECT * FROM DUAL;
 SELECT * FROM Project;
 
 
-DROP TABLE Employee;
+/*DROP TABLE Employee;
 CREATE TABLE Employee (employee_id int, name varchar(255), experience_years int);
 TRUNCATE TABLE Employee;
 INSERT ALL
@@ -72,4 +73,26 @@ INTO Employee (employee_id, name, experience_years) VALUES ('2', 'Ali', '2')
 INTO Employee (employee_id, name, experience_years) VALUES ('3', 'John', '1')
 INTO Employee (employee_id, name, experience_years) VALUES ('4', 'Doe', '2')
 SELECT * FROM DUAL;
-SELECT * FROM Employee;
+SELECT * FROM Employee;*/
+
+SELECT project_id,
+count(EMPLOYEE_ID)
+FROM Project
+GROUP BY project_id;
+
+--But I should consider that there might be multiple max (compare with E21)
+SELECT PROJECT_ID
+FROM
+(
+	SELECT PROJECT_ID,
+	ORDER_CNT,
+	RANK() OVER (ORDER BY ORDER_CNT DESC) RNK
+	FROM
+	(
+		SELECT PROJECT_ID,
+		COUNT(EMPLOYEE_ID) ORDER_CNT
+		FROM PROJECT
+		GROUP BY PROJECT_ID
+	)
+)
+WHERE RNK = 1;

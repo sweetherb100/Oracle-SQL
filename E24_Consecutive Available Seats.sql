@@ -31,3 +31,48 @@ INTO seats (seat_id, free) VALUES ('4', '1')
 INTO seats (seat_id, free) VALUES ('5', '1')
 SELECT * FROM DUAL;
 SELECT * FROM seats;
+
+SELECT seat_id,
+free,
+lag(seat_id) OVER (ORDER BY seat_id) after_id,
+lag(FREE) OVER (ORDER BY seat_id) after_free
+FROM seats;
+
+SELECT seat_id,
+free,
+lag(seat_id) OVER (ORDER BY seat_id) after_id,
+lag(FREE) OVER (ORDER BY seat_id) after_free
+FROM seats;
+--WHERE free=1 AND lag(FREE) OVER (ORDER BY seat_id)=1; --WINDOW FUNCTION IS NOT allowed 
+
+--approach is too complicated
+SELECT seat_id,
+after_id
+FROM 
+(
+	SELECT seat_id,
+	free,
+	lag(seat_id) OVER (ORDER BY seat_id) after_id,
+	lag(FREE) OVER (ORDER BY seat_id) after_free
+	FROM seats
+)
+WHERE FREE=1 AND after_free=1;
+
+SELECT seat_id,
+LEAD(free) OVER (ORDER BY seat_id) prev_free,
+FREE,
+lag(FREE) OVER (ORDER BY seat_id) after_free
+FROM seats;
+
+
+--Final
+SELECT seat_id
+FROM
+(
+SELECT seat_id,
+LEAD(free) OVER (ORDER BY seat_id) prev_free,
+FREE,
+lag(FREE) OVER (ORDER BY seat_id) after_free
+FROM seats
+) S
+WHERE (prev_free=1 AND FREE=1) OR (after_free=1 AND FREE=1);

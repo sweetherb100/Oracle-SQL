@@ -35,3 +35,17 @@ INTO my_numbers (num) VALUES ('5')
 INTO my_numbers (num) VALUES ('6')
 SELECT * FROM DUAL;
 SELECT * FROM my_numbers;
+
+SELECT num --max(num) is WRONG!
+FROM my_numbers
+GROUP BY num
+HAVING count(num) = 1;
+
+SELECT max(num)
+FROM
+(
+	SELECT num
+	FROM my_numbers
+	GROUP BY num
+	HAVING count(num) = 1
+);

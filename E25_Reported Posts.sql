@@ -8,7 +8,7 @@
 | action        | enum    |
 | extra         | varchar |
 +---------------+---------+
-There is no primary key for this table, it may have duplicate rows.
+There is no primary key for this table, it may have "duplicate" rows.
 The action column is an ENUM type of ('view', 'like', 'reaction', 'comment', 'report', 'share').
 The extra column has optional information about the action such as a reason for report or a type of reaction.
 
@@ -62,3 +62,26 @@ INTO Actions (user_id, post_id, action_date, action, extra) VALUES ('5', '5', TO
 INTO Actions (user_id, post_id, action_date, action, extra) VALUES ('5', '5', TO_DATE('2019-07-04','YYYY-MM-DD'), 'report', 'racism') 
 SELECT * FROM DUAL;
 SELECT * FROM Actions;
+
+SELECT *
+FROM Actions
+WHERE action_date = TO_DATE('2019-07-04','YYYY-MM-DD')
+AND ACTION = 'report';
+
+SELECT DISTINCT post_id, 
+extra
+FROM Actions
+WHERE action_date = TO_DATE('2019-07-04','YYYY-MM-DD')
+AND ACTION = 'report';
+
+SELECT extra report_reason,
+count(extra) report_count
+FROM
+(
+SELECT DISTINCT post_id, 
+extra
+FROM Actions
+WHERE action_date = TO_DATE('2019-07-04','YYYY-MM-DD')
+AND ACTION = 'report'
+)
+GROUP BY extra;

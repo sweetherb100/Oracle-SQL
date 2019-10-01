@@ -1,5 +1,4 @@
 /*Table: Sales
-
 +-------------+-------+
 | Column Name | Type  |
 +-------------+-------+
@@ -12,8 +11,8 @@
 sale_id is the primary key of this table.
 product_id is a foreign key to Product table.
 Note that the price is per unit.
-Table: Product
 
+Table: Product
 +--------------+---------+
 | Column Name  | Type    |
 +--------------+---------+
@@ -21,6 +20,7 @@ Table: Product
 | product_name | varchar |
 +--------------+---------+
 product_id is the primary key of this table.
+
 Write an SQL query that reports the total quantity sold for every product id.
 
 The query result format is in the following example:
@@ -61,7 +61,7 @@ INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('7', '200', '201
 SELECT * FROM DUAL;
 SELECT * FROM Sales;
 
-DROP TABLE Product;
+/*DROP TABLE Product;
 CREATE TABLE Product (product_id int, product_name varchar(255));
 TRUNCATE TABLE Product;
 INSERT ALL 
@@ -69,4 +69,8 @@ INTO Product (product_id, product_name) VALUES ('100', 'Nokia')
 INTO Product (product_id, product_name) VALUES ('200', 'Apple')
 INTO Product (product_id, product_name) VALUES ('300', 'Samsung')
 SELECT * FROM DUAL;
-SELECT * FROM Product;
+SELECT * FROM Product;*/
+SELECT product_id,
+sum(quantity)
+FROM SALES
+GROUP BY product_id;

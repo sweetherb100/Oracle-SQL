@@ -1,12 +1,9 @@
 /*Description
-
 Given three tables: salesperson, company, orders.
-Output all the names in the table salesperson, who didnt have sales to company TED.
 
-Example
-Input
+Output all the names in the table salesperson, who didnt have sales to company RED.
+
 Table: salesperson
-
 +----------+------+--------+-----------------+-----------+
 | sales_id | name | salary | commission_rate | hire_date |
 +----------+------+--------+-----------------+-----------+
@@ -50,7 +47,7 @@ output
 +------+
 
 Explanation
-According to order 3 and 4 in table orders, it is easy to tell only salesperson John and Alex have sales to company TED,
+According to order 3 and 4 in table orders, it is easy to tell only salesperson John and Alex have sales to company RED,
 so we need to output all the other names in table salesperson.*/
 
 DROP TABLE salesperson;
@@ -78,13 +75,40 @@ SELECT * FROM company;
 
 
 DROP TABLE orders;
-CREATE TABLE orders (order_id int, date date, com_id int, sales_id int, amount int);
+CREATE TABLE orders (order_id int, dates date, com_id int, sales_id int, amount int);
 TRUNCATE TABLE orders;
 INSERT ALL
-INTO orders (order_id, date, com_id, sales_id, amount) VALUES ('1', TO_DATE('2014-01-01','YYYY-MM-DD'), '3', '4', '100000')
-INTO orders (order_id, date, com_id, sales_id, amount) VALUES ('2', TO_DATE('2014-02-01','YYYY-MM-DD'), '4', '5', '5000')
-INTO orders (order_id, date, com_id, sales_id, amount) VALUES ('3', TO_DATE('2014-03-01','YYYY-MM-DD'), '1', '1', '50000')
-INTO orders (order_id, date, com_id, sales_id, amount) VALUES ('4', TO_DATE('2014-04-01','YYYY-MM-DD'), '1', '4', '25000')
+INTO orders (order_id, dates, com_id, sales_id, amount) VALUES ('1', TO_DATE('2014-01-01','YYYY-MM-DD'), '3', '4', '100000')
+INTO orders (order_id, dates, com_id, sales_id, amount) VALUES ('2', TO_DATE('2014-02-01','YYYY-MM-DD'), '4', '5', '5000')
+INTO orders (order_id, dates, com_id, sales_id, amount) VALUES ('3', TO_DATE('2014-03-01','YYYY-MM-DD'), '1', '1', '50000')
+INTO orders (order_id, dates, com_id, sales_id, amount) VALUES ('4', TO_DATE('2014-04-01','YYYY-MM-DD'), '1', '4', '25000')
 SELECT * FROM DUAL;
 SELECT * FROM orders;
 
+SELECT sales_id
+FROM orders
+WHERE com_id NOT IN (SELECT com_id FROM company WHERE name = 'RED');
+
+
+--WRONG: lets try different approach where I exclude the one that had sales in RED
+--Exceptional case is Mark who didn't have any sale yet!
+SELECT *
+FROM salesperson S,
+(
+SELECT sales_id
+FROM orders
+WHERE com_id NOT IN (SELECT com_id FROM company WHERE name = 'RED')
+) O
+WHERE S.sales_id = O.sales_id (+);
+
+
+-- I will exclude these salespersons from the final query
+SELECT sales_id
+FROM orders
+WHERE com_id IN (SELECT com_id FROM company WHERE name = 'RED');
+
+SELECT S.name
+FROM salesperson S
+WHERE S.sales_id NOT IN (SELECT sales_id
+						FROM orders
+						WHERE com_id IN (SELECT com_id FROM company WHERE name = 'RED'));		

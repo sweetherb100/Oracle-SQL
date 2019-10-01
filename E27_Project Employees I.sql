@@ -75,3 +75,21 @@ INTO Employee (employee_id, name, experience_years) VALUES ('3', 'John', '1')
 INTO Employee (employee_id, name, experience_years) VALUES ('4', 'Doe', '2')
 SELECT * FROM DUAL;
 SELECT * FROM Employee;
+
+SELECT P.project_id,
+E.experience_years
+FROM project P,
+employee E
+WHERE P.EMPLOYEE_ID = E.employee_id;
+
+SELECT PP.project_id,
+round(avg(PP.experience_years),2) average_years
+FROM  
+(
+	SELECT P.project_id,
+	E.experience_years
+	FROM project P,
+	employee E
+	WHERE P.EMPLOYEE_ID = E.employee_id
+) PP
+GROUP BY PP.project_id;

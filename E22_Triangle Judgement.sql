@@ -1,4 +1,4 @@
-/*A pupil Tim gets homework to identify whether three line segments could possibly form a triangle.
+/*A student Tim gets homework to identify whether three line segments could possibly form a triangle.
 However, this assignment is very heavy because there are hundreds of records to calculate.
 Could you help Tim by writing a query to judge whether these three sides can form a triangle, assuming table triangle holds the length of the three sides x, y and z.
 
@@ -21,3 +21,14 @@ INTO triangle (x, y, z) VALUES ('13', '15', '30')
 INTO triangle (x, y, z) VALUES ('10', '20', '15')
 SELECT * FROM DUAL;
 SELECT * FROM triangle;
+
+SELECT x+y+z - GREATEST(x,y,z) sum_two_sides,
+GREATEST(x,y,z) longest,
+--x+y+z-GREATEST(x,y,z) > GREATEST(x,y,z)
+CASE
+	WHEN x+y+z-GREATEST(x,y,z) > GREATEST(x,y,z)
+	THEN 'yes'
+	ELSE 'no'
+END triangle
+FROM triangle;
+

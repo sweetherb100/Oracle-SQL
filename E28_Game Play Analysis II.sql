@@ -46,3 +46,21 @@ INTO Activity (player_id, device_id, event_date, games_played) VALUES ('3', '1',
 INTO Activity (player_id, device_id, event_date, games_played) VALUES ('3', '4', TO_DATE('2018-07-03', 'YYYY-MM-DD'), '5')
 SELECT * FROM DUAL;
 SELECT * FROM Activity;
+
+SELECT player_id,
+min(event_date) min_date
+FROM ACTIVITY
+GROUP BY player_id;
+
+
+SELECT A.player_id,
+A.device_id
+FROM ACTIVITY A,
+(
+	SELECT player_id,
+	min(event_date) min_date
+	FROM ACTIVITY
+	GROUP BY player_id
+) AA
+WHERE A.player_id = AA.player_id
+AND A.event_date = AA.min_date;
