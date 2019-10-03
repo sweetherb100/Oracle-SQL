@@ -52,44 +52,45 @@ Result table:
 The average experience years for the first project is (3 + 2 + 1) / 3 = 2.00 and for the second project is (3 + 2) / 2 = 2.50*/
 
 
-DROP TABLE Project;
-CREATE TABLE Project (project_id int, employee_id int);
-TRUNCATE TABLE Project;
+DROP TABLE PROJECT;
+CREATE TABLE PROJECT (PROJECT_ID INT, EMPLOYEE_ID INT);
+TRUNCATE TABLE PROJECT;
 INSERT ALL
-INTO Project (project_id, employee_id) VALUES ('1', '1')
-INTO Project (project_id, employee_id) VALUES ('1', '2')
-INTO Project (project_id, employee_id) VALUES ('1', '3')
-INTO Project (project_id, employee_id) VALUES ('2', '1')
-INTO Project (project_id, employee_id) VALUES ('2', '4') 
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('1', '1')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('1', '2')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('1', '3')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('2', '1')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('2', '4') 
 SELECT * FROM DUAL;
-SELECT * FROM Project;
+SELECT * FROM PROJECT;
 
-
-DROP TABLE Employee;
-CREATE TABLE Employee (employee_id int, name varchar(255), experience_years int);
-TRUNCATE TABLE Employee;
+DROP TABLE EMPLOYEE;
+CREATE TABLE EMPLOYEE (EMPLOYEE_ID INT, NAME VARCHAR(255), EXPERIENCE_YEARS INT);
+TRUNCATE TABLE EMPLOYEE;
 INSERT ALL
-INTO Employee (employee_id, name, experience_years) VALUES ('1', 'Khaled', '3')
-INTO Employee (employee_id, name, experience_years) VALUES ('2', 'Ali', '2')
-INTO Employee (employee_id, name, experience_years) VALUES ('3', 'John', '1')
-INTO Employee (employee_id, name, experience_years) VALUES ('4', 'Doe', '2')
+INTO EMPLOYEE (EMPLOYEE_ID, NAME, EXPERIENCE_YEARS) VALUES ('1', 'KHALED', '3')
+INTO EMPLOYEE (EMPLOYEE_ID, NAME, EXPERIENCE_YEARS) VALUES ('2', 'ALI', '2')
+INTO EMPLOYEE (EMPLOYEE_ID, NAME, EXPERIENCE_YEARS) VALUES ('3', 'JOHN', '1')
+INTO EMPLOYEE (EMPLOYEE_ID, NAME, EXPERIENCE_YEARS) VALUES ('4', 'DOE', '2')
 SELECT * FROM DUAL;
-SELECT * FROM Employee;
+SELECT * FROM EMPLOYEE;
 
-SELECT P.project_id,
-E.experience_years
-FROM project P,
-employee E
-WHERE P.EMPLOYEE_ID = E.employee_id;
 
-SELECT PP.project_id,
-round(avg(PP.experience_years),2) average_years
+SELECT P.PROJECT_ID,
+E.EXPERIENCE_YEARS
+FROM PROJECT P,
+EMPLOYEE E
+WHERE P.EMPLOYEE_ID = E.EMPLOYEE_ID;
+
+--FINAL
+SELECT PP.PROJECT_ID,
+ROUND(AVG(PP.EXPERIENCE_YEARS),2) AVERAGE_YEARS
 FROM  
 (
-	SELECT P.project_id,
-	E.experience_years
-	FROM project P,
-	employee E
-	WHERE P.EMPLOYEE_ID = E.employee_id
+	SELECT P.PROJECT_ID,
+	E.EXPERIENCE_YEARS
+	FROM PROJECT P,
+	EMPLOYEE E
+	WHERE P.EMPLOYEE_ID = E.EMPLOYEE_ID
 ) PP
-GROUP BY PP.project_id;
+GROUP BY PP.PROJECT_ID;

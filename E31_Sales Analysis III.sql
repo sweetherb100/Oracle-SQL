@@ -51,34 +51,15 @@ Result table:
 | 200        | 2011       | 15       | 9000  |
 +------------+------------+----------+-------+*/
 
-DROP TABLE Sales;
-CREATE TABLE Sales (sale_id int, product_id int, year int, quantity int, price int);
-TRUNCATE TABLE Sales;
+DROP TABLE SALES;
+CREATE TABLE SALES (SALE_ID INT, PRODUCT_ID INT, YEAR INT, QUANTITY INT, PRICE INT);
+TRUNCATE TABLE SALES;
 INSERT ALL 
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('1', '100', '2008', '10', '5000')
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('2', '100', '2009', '12', '5000')
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('7', '200', '2011', '15', '9000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('1', '100', '2008', '10', '5000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('2', '100', '2009', '12', '5000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('7', '200', '2011', '15', '9000')
 SELECT * FROM DUAL;
-SELECT * FROM Sales;
-
-SELECT product_id,
-min(year)
-FROM sales
-GROUP BY product_id;
-
-SELECT S.product_id,
-S.YEAR,
-S.quantity,
-S.price
-FROM Sales S,
-(
-	SELECT product_id,
-	min(year) min_year
-	FROM sales
-	GROUP BY product_id
-) SS
-WHERE S.product_id = SS.product_id
-AND S.YEAR = SS.min_year
+SELECT * FROM SALES;
 
 /*DROP TABLE Product;
 CREATE TABLE Product (product_id int, product_name varchar(255));
@@ -89,3 +70,20 @@ INTO Product (product_id, product_name) VALUES ('200', 'Apple')
 INTO Product (product_id, product_name) VALUES ('300', 'Samsung')
 SELECT * FROM DUAL;
 SELECT * FROM Product;*/
+
+
+
+--I am literally picking the first year so I don't need to worry about having multiple min
+SELECT S.PRODUCT_ID,
+S.YEAR,
+S.QUANTITY,
+S.PRICE
+FROM SALES S,
+(
+	SELECT PRODUCT_ID,
+	MIN(YEAR) MIN_YEAR
+	FROM SALES
+	GROUP BY PRODUCT_ID
+) SS
+WHERE S.PRODUCT_ID = SS.PRODUCT_ID
+AND S.YEAR = SS.MIN_YEAR;

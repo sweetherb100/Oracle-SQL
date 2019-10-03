@@ -7,6 +7,7 @@
 | timestamp   | int     |
 +-------------+---------+
 timestamp is the primary key column for this table.
+
 Write a SQL query for a report that provides the pairs (actor_id, director_id) where the actor have cooperated with the director at least 3 times.
 
 Example:
@@ -33,21 +34,21 @@ Result table:
 The only pair is (1, 1) where they cooperated exactly 3 times.*/
 
 
-CREATE TABLE ActorDirector (actor_id int, director_id int, timestamp int);
-TRUNCATE TABLE ActorDirector;
+CREATE TABLE ACTORDIRECTOR (ACTOR_ID INT, DIRECTOR_ID INT, TIMESTAMP INT);
+TRUNCATE TABLE ACTORDIRECTOR;
 INSERT ALL
-INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('1', '1', '0')
-INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('1', '1', '1')
-INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('1', '1', '2')
-INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('1', '2', '3')
-INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('1', '2', '4')
-INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('2', '1', '5')
-INTO ActorDirector (actor_id, director_id, timestamp) VALUES ('2', '1', '6')
+INTO ACTORDIRECTOR (ACTOR_ID, DIRECTOR_ID, TIMESTAMP) VALUES ('1', '1', '0')
+INTO ACTORDIRECTOR (ACTOR_ID, DIRECTOR_ID, TIMESTAMP) VALUES ('1', '1', '1')
+INTO ACTORDIRECTOR (ACTOR_ID, DIRECTOR_ID, TIMESTAMP) VALUES ('1', '1', '2')
+INTO ACTORDIRECTOR (ACTOR_ID, DIRECTOR_ID, TIMESTAMP) VALUES ('1', '2', '3')
+INTO ACTORDIRECTOR (ACTOR_ID, DIRECTOR_ID, TIMESTAMP) VALUES ('1', '2', '4')
+INTO ACTORDIRECTOR (ACTOR_ID, DIRECTOR_ID, TIMESTAMP) VALUES ('2', '1', '5')
+INTO ACTORDIRECTOR (ACTOR_ID, DIRECTOR_ID, TIMESTAMP) VALUES ('2', '1', '6')
 SELECT * FROM DUAL;
-SELECT * FROM ActorDirector;
+SELECT * FROM ACTORDIRECTOR;
 
 SELECT ACTOR_ID,
 DIRECTOR_ID
-FROM ActorDirector
+FROM ACTORDIRECTOR
 GROUP BY ACTOR_ID, DIRECTOR_ID
 HAVING COUNT(ACTOR_ID) >= 3;

@@ -30,61 +30,34 @@ Explanation
 The customer with number '3' has two orders, which is greater than either customer '1' or '2' because each of them  only has one order. 
 So the result is customer_number '3'.*/
 
-DROP TABLE customer;
-CREATE TABLE customer (order_number int, customer_number int, order_date date, required_date date, shipped_date date, status varchar(255), comments varchar(255));
-TRUNCATE TABLE customer;
+DROP TABLE CUSTOMER;
+CREATE TABLE CUSTOMER (ORDER_NUMBER INT, CUSTOMER_NUMBER INT, ORDER_DATE DATE, REQUIRED_DATE DATE, SHIPPED_DATE DATE, STATUS VARCHAR(255), COMMENTS VARCHAR(255));
+TRUNCATE TABLE CUSTOMER;
 INSERT ALL
-INTO customer (order_number, customer_number, order_date, required_date, shipped_date, status, comments) VALUES ('1', '1', TO_DATE('2017-04-09','YYYY-MM-DD'), TO_DATE('2017-04-13','YYYY-MM-DD'), TO_DATE('2017-04-12','YYYY-MM-DD'), 'Closed', NULL)
-INTO customer (order_number, customer_number, order_date, required_date, shipped_date, status, comments) VALUES ('2', '2', TO_DATE('2017-04-15','YYYY-MM-DD'), TO_DATE('2017-04-20','YYYY-MM-DD'), TO_DATE('2017-04-18','YYYY-MM-DD'), 'Closed', NULL)
-INTO customer (order_number, customer_number, order_date, required_date, shipped_date, status, comments) VALUES ('3', '3', TO_DATE('2017-04-16','YYYY-MM-DD'), TO_DATE('2017-04-25','YYYY-MM-DD'), TO_DATE('2017-04-20','YYYY-MM-DD'), 'Closed', NULL)
-INTO customer (order_number, customer_number, order_date, required_date, shipped_date, status, comments) VALUES ('4', '3', TO_DATE('2017-04-18','YYYY-MM-DD'), TO_DATE('2017-04-28','YYYY-MM-DD'), TO_DATE('2017-04-25','YYYY-MM-DD'), 'Closed', NULL)
+INTO CUSTOMER (ORDER_NUMBER, CUSTOMER_NUMBER, ORDER_DATE, REQUIRED_DATE, SHIPPED_DATE, STATUS, COMMENTS) VALUES ('1', '1', TO_DATE('2017-04-09','YYYY-MM-DD'), TO_DATE('2017-04-13','YYYY-MM-DD'), TO_DATE('2017-04-12','YYYY-MM-DD'), 'CLOSED', NULL)
+INTO CUSTOMER (ORDER_NUMBER, CUSTOMER_NUMBER, ORDER_DATE, REQUIRED_DATE, SHIPPED_DATE, STATUS, COMMENTS) VALUES ('2', '2', TO_DATE('2017-04-15','YYYY-MM-DD'), TO_DATE('2017-04-20','YYYY-MM-DD'), TO_DATE('2017-04-18','YYYY-MM-DD'), 'CLOSED', NULL)
+INTO CUSTOMER (ORDER_NUMBER, CUSTOMER_NUMBER, ORDER_DATE, REQUIRED_DATE, SHIPPED_DATE, STATUS, COMMENTS) VALUES ('3', '3', TO_DATE('2017-04-16','YYYY-MM-DD'), TO_DATE('2017-04-25','YYYY-MM-DD'), TO_DATE('2017-04-20','YYYY-MM-DD'), 'CLOSED', NULL)
+INTO CUSTOMER (ORDER_NUMBER, CUSTOMER_NUMBER, ORDER_DATE, REQUIRED_DATE, SHIPPED_DATE, STATUS, COMMENTS) VALUES ('4', '3', TO_DATE('2017-04-18','YYYY-MM-DD'), TO_DATE('2017-04-28','YYYY-MM-DD'), TO_DATE('2017-04-25','YYYY-MM-DD'), 'CLOSED', NULL)
 SELECT * FROM DUAL;
-SELECT * FROM customer;
+SELECT * FROM CUSTOMER;
 
 
-SELECT customer_number
-FROM customer
-GROUP BY customer_number
-ORDER BY count(customer_number) DESC;
+SELECT CUSTOMER_NUMBER
+FROM CUSTOMER
+GROUP BY CUSTOMER_NUMBER
+ORDER BY COUNT(CUSTOMER_NUMBER) DESC;
 
---When guranteed to have only 1 max
+--[CASE 1] WHEN GURANTEED TO HAVE ONLY 1 MAX
 SELECT *
 FROM (
-SELECT customer_number
-FROM customer
-GROUP BY customer_number
-ORDER BY count(customer_number) DESC
+	SELECT CUSTOMER_NUMBER
+	FROM CUSTOMER
+	GROUP BY CUSTOMER_NUMBER
+	ORDER BY COUNT(CUSTOMER_NUMBER) DESC
 ) T
-WHERE rownum =1;
+WHERE ROWNUM =1;
 
--- WHEN NOT guranteed TO have 1 max
-SELECT customer_number,
-count(CUSTOMER_NUMBER)
-FROM customer
-GROUP BY customer_number;
-
-SELECT max(count(customer_number)) max_num
-FROM CUSTOMER
-GROUP BY CUSTOMER_NUMBER;
-
---[method1] my style
-SELECT C.CUSTOMER_NUMBER
-FROM 
-(
-	SELECT CUSTOMER_NUMBER,
-	COUNT(CUSTOMER_NUMBER) CNT_NUM
-	FROM CUSTOMER
-	GROUP BY CUSTOMER_NUMBER
-) C,
-(
-	SELECT MAX(COUNT(CUSTOMER_NUMBER)) MAX_NUM
-	FROM CUSTOMER
-	GROUP BY CUSTOMER_NUMBER
-) C1
-WHERE C.CNT_NUM = C1.MAX_NUM;
-
-
---[method2] yulkyu style
+-- [CASE 2] WHEN NOT GURANTEED TO HAVE 1 MAX
 SELECT CUSTOMER_NUMBER
   FROM (
         SELECT CUSTOMER_NUMBER, 
@@ -98,7 +71,7 @@ SELECT CUSTOMER_NUMBER
                  ORDER BY ORDER_COUNTS DESC
                )
        )
- WHERE RNK  = 1 -- 중복 1위를 다 보고 싶을때
- WHERE RNUM = 1; -- 중복이어도 1위는 하나만 보고 싶을때
+ WHERE RNK  = 1;
+-- WHERE RNUM = 1;
 
 

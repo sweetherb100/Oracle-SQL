@@ -29,44 +29,37 @@ Example ouput:
 | Brad  | null  |
 +-------+-------+*/
 
-DROP TABLE Employee;
-CREATE TABLE Employee (empId int, name varchar(255), supervisor int, salary int);
-TRUNCATE TABLE Employee;
+DROP TABLE EMPLOYEE;
+CREATE TABLE EMPLOYEE (EMPID INT, NAME VARCHAR(255), SUPERVISOR INT, SALARY INT);
+TRUNCATE TABLE EMPLOYEE;
 INSERT ALL
-INTO Employee (empId, name, supervisor, salary) VALUES ('1', 'John', '3', '1000')
-INTO Employee (empId, name, supervisor, salary) VALUES ('2', 'Dan', '3', '2000')
-INTO Employee (empId, name, supervisor, salary) VALUES ('3', 'Brad', null, '4000')
-INTO Employee (empId, name, supervisor, salary) VALUES ('4', 'Thomas', '3', '4000')
+INTO EMPLOYEE (EMPID, NAME, SUPERVISOR, SALARY) VALUES ('1', 'JOHN', '3', '1000')
+INTO EMPLOYEE (EMPID, NAME, SUPERVISOR, SALARY) VALUES ('2', 'DAN', '3', '2000')
+INTO EMPLOYEE (EMPID, NAME, SUPERVISOR, SALARY) VALUES ('3', 'BRAD', NULL, '4000')
+INTO EMPLOYEE (EMPID, NAME, SUPERVISOR, SALARY) VALUES ('4', 'THOMAS', '3', '4000')
 SELECT * FROM DUAL;
-SELECT * FROM Employee;
+SELECT * FROM EMPLOYEE;
 
-DROP TABLE Bonus;
-CREATE TABLE Bonus (empId int, bonus int);
-TRUNCATE TABLE Bonus;
+DROP TABLE BONUS;
+CREATE TABLE BONUS (EMPID INT, BONUS INT);
+TRUNCATE TABLE BONUS;
 INSERT ALL
-INTO Bonus (empId, bonus) VALUES ('2', '500')
-INTO Bonus (empId, bonus) VALUES ('4', '2000')
+INTO BONUS (EMPID, BONUS) VALUES ('2', '500')
+INTO BONUS (EMPID, BONUS) VALUES ('4', '2000')
 SELECT * FROM DUAL;
-SELECT * FROM Bonus;
-
-SELECT empId,
-name
-FROM Employee
-WHERE empId NOT IN (SELECT empId
-						FROM Bonus
-						WHERE bonus >=1000);
+SELECT * FROM BONUS;
 
 
-SELECT EE.name,
-B.bonus
-FROM Bonus B,
+SELECT EE.NAME,
+B.BONUS
+FROM BONUS B,
 (
-SELECT empId,
-name
-FROM Employee
-WHERE empId NOT IN (SELECT empId
-						FROM Bonus
-						WHERE bonus >=1000)
+	SELECT EMPID,
+	NAME
+	FROM EMPLOYEE
+	WHERE EMPID NOT IN (SELECT EMPID
+							FROM BONUS
+							WHERE BONUS >=1000)
 ) EE
-WHERE EE.EmpId = B.EmpId (+);
+WHERE EE.EMPID = B.EMPID (+);
 					

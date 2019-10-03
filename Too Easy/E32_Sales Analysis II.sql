@@ -21,7 +21,6 @@ Table: Product
 +--------------+---------+
 product_id is the primary key of this table.
 
-
 Write an SQL query that reports the total quantity sold for every product id.
 
 The query result format is in the following example:
@@ -50,12 +49,29 @@ Result table:
 +--------------+----------------+
 | 100          | 22             |
 | 200          | 15             |
-+--------------+----------------+
-*/
++--------------+----------------+*/
 
-SELECT P.PRODUCT_ID,
-SUM(S.QUANTITY) AS TOTAL_QUANTITY
-FROM SALES S, PRODUCT P
-WHERE S.PRODUCT_ID = P.PRODUCT_ID
-GROUP BY P.PRODUCT_ID
-ORDER BY P.PRODUCT_ID;
+DROP TABLE Sales;
+CREATE TABLE Sales (sale_id int, product_id int, year int, quantity int, price int);
+TRUNCATE TABLE Sales;
+INSERT ALL 
+INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('1', '100', '2008', '10', '5000')
+INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('2', '100', '2009', '12', '5000')
+INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('7', '200', '2011', '15', '9000')
+SELECT * FROM DUAL;
+SELECT * FROM Sales;
+
+/*DROP TABLE Product;
+CREATE TABLE Product (product_id int, product_name varchar(255));
+TRUNCATE TABLE Product;
+INSERT ALL 
+INTO Product (product_id, product_name) VALUES ('100', 'Nokia')
+INTO Product (product_id, product_name) VALUES ('200', 'Apple')
+INTO Product (product_id, product_name) VALUES ('300', 'Samsung')
+SELECT * FROM DUAL;
+SELECT * FROM Product;*/
+
+SELECT PRODUCT_ID,
+SUM(QUANTITY)
+FROM SALES
+GROUP BY PRODUCT_ID;

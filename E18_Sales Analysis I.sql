@@ -54,7 +54,7 @@ Result table:
 +-------------+
 Both sellers with id 1 and 3 sold products with the most total price of 2800.*/
 
-DROP TABLE Product;
+/*DROP TABLE Product;
 CREATE TABLE Product (product_id int, product_name varchar(255), unit_price int);
 TRUNCATE TABLE Product;
 INSERT ALL
@@ -62,8 +62,7 @@ INTO Product (product_id, product_name, unit_price) VALUES ('1', 'S8', '1000')
 INTO Product (product_id, product_name, unit_price) VALUES ('2', 'G4', '800')
 INTO Product (product_id, product_name, unit_price) VALUES ('3', 'iPhone','1400')
 SELECT * FROM DUAL;
-SELECT * FROM Product;
-
+SELECT * FROM Product;*/
 
 DROP TABLE Sales;
 CREATE TABLE Sales (seller_id int, product_id int, buyer_id int, sale_date date, quantity int, price int);
@@ -76,30 +75,8 @@ INTO Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) VALUES 
 SELECT * FROM DUAL;
 SELECT * FROM Sales;
 
---WRONG (1): not a GROUP BY expression
-SELECT S.SELLER_ID,
-		SUM(S.PRICE) TOT_PRICE
-FROM SALES S,
-	(SELECT MAX(SUM(PRICE)) MAX_PRICE
-	FROM SALES
-	GROUP BY SELLER_ID) M
-GROUP BY S.SELLER_ID
-HAVING SUM(S.PRICE)= M.MAX_PRICE;
---not working because HAVING can only have GROUP FUNCTION
--- but there is M.MAX_PRICE so doesn't execute
-
---WRONG (2): there can be same seller with same price
-SELECT  *
-FROM (
-      SELECT S.SELLER_ID
-                 , SUM(S.PRICE) AS PRICE
-         FROM SALES S
-       GROUP BY S.SELLER_ID
-       ORDER BY PRICE DESC
-      )
-  WHERE ROWNUM = 1;
- 
- --FINAL
+ -- Keep in mind that there might be a tie
+ --[METHOD 1]
 SELECT S.SELLER_ID,
 		SUM(S.PRICE) TOT_PRICE
 FROM SALES S
@@ -108,3 +85,22 @@ HAVING SUM(S.PRICE)= (SELECT MAX(SUM(PRICE)) MAX_PRICE
 					FROM SALES
 					GROUP BY SELLER_ID);
 
+--[METHOD 2] DENSE_RANK()
+SELECT SELLER_ID,
+TOT_PRICE
+FROM
+(
+	SELECT SELLER_ID,
+	TOT_PRICE,
+	DENSE_RANK() OVER (ORDER BY TOT_PRICE DESC) DRK,
+	RANK() OVER (ORDER BY TOT_PRICE DESC) RK,
+	ROW_NUMBER () OVER (ORDER BY TOT_PRICE DESC) AS RNUM
+	FROM
+	(
+		SELECT SELLER_ID,
+		SUM(PRICE) TOT_PRICE
+		FROM SALES
+		GROUP BY SELLER_ID
+	)
+)
+WHERE RK=1;

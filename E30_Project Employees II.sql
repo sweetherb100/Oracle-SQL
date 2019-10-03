@@ -51,18 +51,17 @@ Result table:
 +-------------+
 The first project has 3 employees while the second one has 2.*/
 
-DROP TABLE Project;
-CREATE TABLE Project (project_id int, employee_id int);
-TRUNCATE TABLE Project;
+DROP TABLE PROJECT;
+CREATE TABLE PROJECT (PROJECT_ID INT, EMPLOYEE_ID INT);
+TRUNCATE TABLE PROJECT;
 INSERT ALL
-INTO Project (project_id, employee_id) VALUES ('1', '1')
-INTO Project (project_id, employee_id) VALUES ('1', '2')
-INTO Project (project_id, employee_id) VALUES ('1', '3')
-INTO Project (project_id, employee_id) VALUES ('2', '1')
-INTO Project (project_id, employee_id) VALUES ('2', '4') 
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('1', '1')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('1', '2')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('1', '3')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('2', '1')
+INTO PROJECT (PROJECT_ID, EMPLOYEE_ID) VALUES ('2', '4') 
 SELECT * FROM DUAL;
-SELECT * FROM Project;
-
+SELECT * FROM PROJECT;
 
 /*DROP TABLE Employee;
 CREATE TABLE Employee (employee_id int, name varchar(255), experience_years int);
@@ -75,12 +74,12 @@ INTO Employee (employee_id, name, experience_years) VALUES ('4', 'Doe', '2')
 SELECT * FROM DUAL;
 SELECT * FROM Employee;*/
 
-SELECT project_id,
-count(EMPLOYEE_ID)
-FROM Project
-GROUP BY project_id;
+SELECT PROJECT_ID,
+COUNT(EMPLOYEE_ID)
+FROM PROJECT
+GROUP BY PROJECT_ID;
 
---But I should consider that there might be multiple max (compare with E21)
+--Consider that there might be multiple max
 SELECT PROJECT_ID
 FROM
 (

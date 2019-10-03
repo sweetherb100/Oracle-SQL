@@ -20,59 +20,35 @@ Note:
 The seat_id is an auto increment int, and free is bool (1 means free, and 0 means occupied.).
 Consecutive available seats are more than 2(inclusive) seats consecutively available.*/
 
-DROP TABLE seats;
-CREATE TABLE seats (seat_id int, free int);
-TRUNCATE TABLE seats;
+DROP TABLE SEATS;
+CREATE TABLE SEATS (SEAT_ID INT, FREE INT);
+TRUNCATE TABLE SEATS;
 INSERT ALL
-INTO seats (seat_id, free) VALUES ('1', '1')
-INTO seats (seat_id, free) VALUES ('2', '0')
-INTO seats (seat_id, free) VALUES ('3', '1')
-INTO seats (seat_id, free) VALUES ('4', '1')
-INTO seats (seat_id, free) VALUES ('5', '1')
+INTO SEATS (SEAT_ID, FREE) VALUES ('1', '1')
+INTO SEATS (SEAT_ID, FREE) VALUES ('2', '0')
+INTO SEATS (SEAT_ID, FREE) VALUES ('3', '1')
+INTO SEATS (SEAT_ID, FREE) VALUES ('4', '1')
+INTO SEATS (SEAT_ID, FREE) VALUES ('5', '1')
 SELECT * FROM DUAL;
-SELECT * FROM seats;
+SELECT * FROM SEATS;
 
-SELECT seat_id,
-free,
-lag(seat_id) OVER (ORDER BY seat_id) after_id,
-lag(FREE) OVER (ORDER BY seat_id) after_free
-FROM seats;
-
-SELECT seat_id,
-free,
-lag(seat_id) OVER (ORDER BY seat_id) after_id,
-lag(FREE) OVER (ORDER BY seat_id) after_free
-FROM seats;
---WHERE free=1 AND lag(FREE) OVER (ORDER BY seat_id)=1; --WINDOW FUNCTION IS NOT allowed 
-
---approach is too complicated
-SELECT seat_id,
-after_id
-FROM 
-(
-	SELECT seat_id,
-	free,
-	lag(seat_id) OVER (ORDER BY seat_id) after_id,
-	lag(FREE) OVER (ORDER BY seat_id) after_free
-	FROM seats
-)
-WHERE FREE=1 AND after_free=1;
-
-SELECT seat_id,
-LEAD(free) OVER (ORDER BY seat_id) prev_free,
+--WRONG
+SELECT SEAT_ID,
 FREE,
-lag(FREE) OVER (ORDER BY seat_id) after_free
-FROM seats;
+LAG(SEAT_ID) OVER (ORDER BY SEAT_ID) PREV_ID,
+LAG(FREE) OVER (ORDER BY SEAT_ID) PREV_FREE
+FROM SEATS;
+--WHERE FREE=1 AND LAG(FREE) OVER (ORDER BY SEAT_ID)=1; --WINDOW FUNCTION IS NOT ALLOWED 
 
 
---Final
-SELECT seat_id
+--FINAL
+SELECT SEAT_ID
 FROM
 (
-SELECT seat_id,
-LEAD(free) OVER (ORDER BY seat_id) prev_free,
-FREE,
-lag(FREE) OVER (ORDER BY seat_id) after_free
-FROM seats
+	SELECT SEAT_ID,
+	LEAD(FREE) OVER (ORDER BY SEAT_ID) AFTER_FREE,
+	FREE,
+	LAG(FREE) OVER (ORDER BY SEAT_ID) PREV_FREE
+	FROM SEATS
 ) S
-WHERE (prev_free=1 AND FREE=1) OR (after_free=1 AND FREE=1);
+WHERE (PREV_FREE=1 AND FREE=1) OR (AFTER_FREE=1 AND FREE=1);

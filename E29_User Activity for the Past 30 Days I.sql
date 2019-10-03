@@ -42,36 +42,37 @@ Result table:
 +------------+--------------+ 
 Note that we do not care about days with zero active users.*/
 
-DROP TABLE Activity;
-CREATE TABLE Activity (user_id int, session_id int, activity_date date, activity_type varchar(255));
-TRUNCATE TABLE Activity;
+DROP TABLE ACTIVITY;
+CREATE TABLE ACTIVITY (USER_ID INT, SESSION_ID INT, ACTIVITY_DATE DATE, ACTIVITY_TYPE VARCHAR(255));
+TRUNCATE TABLE ACTIVITY;
 INSERT ALL
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'scroll_down')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'end_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('2', '4', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'send_message')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'end_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'send_message')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'end_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'end_session')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'SCROLL_DOWN')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'END_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('2', '4', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'SEND_MESSAGE')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'END_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'SEND_MESSAGE')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'END_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'END_SESSION')
 SELECT * FROM DUAL;
-SELECT * FROM Activity;
+SELECT * FROM ACTIVITY;
 
 SELECT *
 FROM ACTIVITY
-WHERE TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30 <= activity_date
-AND activity_date <= TO_DATE('2019-07-27', 'YYYY-MM-DD');
+WHERE TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30 <= ACTIVITY_DATE
+AND ACTIVITY_DATE <= TO_DATE('2019-07-27', 'YYYY-MM-DD');
 
-SELECT activity_date DAY,
-count(user_id) active_users
+--FINAL
+SELECT ACTIVITY_DATE DAY,
+COUNT(USER_ID) ACTIVE_USERS
 FROM (
-	SELECT DISTINCT user_id, --should use distinct (be careful!)
+	SELECT DISTINCT USER_ID, --SHOULD USE DISTINCT (BE CAREFUL!)
 	ACTIVITY_DATE
 	FROM ACTIVITY
-	WHERE TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30 <= activity_date
-	AND activity_date <= TO_DATE('2019-07-27', 'YYYY-MM-DD')
+	WHERE TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30 <= ACTIVITY_DATE
+	AND ACTIVITY_DATE <= TO_DATE('2019-07-27', 'YYYY-MM-DD')
 ) A
-GROUP BY activity_date;
+GROUP BY ACTIVITY_DATE;

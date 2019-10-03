@@ -1,8 +1,8 @@
 /*
-Suppose that a website contains two tables, the Customers table and the Orders table. Write a SQL query to find all customers who never order anything.
+Suppose that a website contains two tables, the Customers table and the Orders table. 
+Write a SQL query to find all customers who never order anything.
 
 Table: Customers.
-
 +----+-------+
 | Id | Name  |
 +----+-------+
@@ -11,16 +11,16 @@ Table: Customers.
 | 3  | Sam   |
 | 4  | Max   |
 +----+-------+
-Table: Orders.
 
+Table: Orders.
 +----+------------+
 | Id | CustomerId |
 +----+------------+
 | 1  | 3          |
 | 2  | 1          |
 +----+------------+
-Using the above tables as example, return the following:
 
+Using the above tables as example, return the following:
 +-----------+
 | Customers |
 +-----------+
@@ -29,35 +29,28 @@ Using the above tables as example, return the following:
 +-----------+
 */
 
-CREATE TABLE Customers (Id int, Name varchar(255));
-CREATE TABLE Orders (Id int, CustomerId int);
-TRUNCATE TABLE Customers;
+CREATE TABLE CUSTOMERS (ID INT, NAME VARCHAR(255));
+CREATE TABLE ORDERS (ID INT, CUSTOMERID INT);
+TRUNCATE TABLE CUSTOMERS;
 INSERT ALL
-INTO Customers (Id, Name) VALUES ('1', 'Joe')
-INTO Customers (Id, Name) VALUES ('2', 'Henry')
-INTO Customers (Id, Name) VALUES ('3', 'Sam')
-INTO Customers (Id, Name) VALUES ('4', 'Max')
+INTO CUSTOMERS (ID, NAME) VALUES ('1', 'JOE')
+INTO CUSTOMERS (ID, NAME) VALUES ('2', 'HENRY')
+INTO CUSTOMERS (ID, NAME) VALUES ('3', 'SAM')
+INTO CUSTOMERS (ID, NAME) VALUES ('4', 'MAX')
 SELECT * FROM DUAL;
 
-Truncate table Orders;
+TRUNCATE TABLE ORDERS;
 INSERT ALL
-INTO Orders (Id, CustomerId) VALUES ('1', '3')
-INTO Orders (Id, CustomerId) VALUES ('2', '1')
+INTO ORDERS (ID, CUSTOMERID) VALUES ('1', '3')
+INTO ORDERS (ID, CUSTOMERID) VALUES ('2', '1')
 SELECT * FROM DUAL;
 
 
 
---[METHOD 1]
-SELECT C.Name AS Customers
-FROM Customers C, Orders O
-WHERE 1=1
-AND C.Id = O.CustomerId  (+)
-AND O.CustomerId IS NULL -- WRONG SYNTAX: = NULL
 
-
---[METHOD 2] USE "NOT IN" (or "NOT EXISTS")
-SELECT C.Name AS Customers
-FROM Customers C
+--USE "NOT IN"
+SELECT C.NAME AS CUSTOMERS
+FROM CUSTOMERS C
 WHERE 1=1
-AND C.Id NOT IN (SELECT E.customerid 
-                 FROM Orders E )
+AND C.ID NOT IN (SELECT E.CUSTOMERID 
+                 FROM ORDERS E );

@@ -1,5 +1,6 @@
 /*
  * Reports all product names of the products in the Sales table along with their selling year and price
+ * 
 Sales table:
 +---------+------------+------+----------+-------+
 | sale_id | product_id | year | quantity | price |
@@ -27,30 +28,30 @@ Result table:
 | Apple        | 2011  | 9000  |
 +--------------+-------+-------+*/
 
-DROP TABLE Sales;
-CREATE TABLE Sales (sale_id int, product_id int, year int, quantity int, price int);
-TRUNCATE TABLE Sales;
+DROP TABLE SALES;
+CREATE TABLE SALES (SALE_ID INT, PRODUCT_ID INT, YEAR INT, QUANTITY INT, PRICE INT);
+TRUNCATE TABLE SALES;
 INSERT ALL 
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('1', '100', '2008', '10', '5000')
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('2', '100', '2009', '12', '5000')
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('7', '200', '2011', '15', '9000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('1', '100', '2008', '10', '5000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('2', '100', '2009', '12', '5000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('7', '200', '2011', '15', '9000')
 SELECT * FROM DUAL;
-SELECT * FROM Sales;
+SELECT * FROM SALES;
 
-DROP TABLE Product;
-CREATE TABLE Product (product_id int, product_name varchar(255));
-TRUNCATE TABLE Product;
+DROP TABLE PRODUCT;
+CREATE TABLE PRODUCT (PRODUCT_ID INT, PRODUCT_NAME VARCHAR(255));
+TRUNCATE TABLE PRODUCT;
 INSERT ALL 
-INTO Product (product_id, product_name) VALUES ('100', 'Nokia')
-INTO Product (product_id, product_name) VALUES ('200', 'Apple')
-INTO Product (product_id, product_name) VALUES ('300', 'Samsung')
+INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME) VALUES ('100', 'NOKIA')
+INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME) VALUES ('200', 'APPLE')
+INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME) VALUES ('300', 'SAMSUNG')
 SELECT * FROM DUAL;
-SELECT * FROM Product;
+SELECT * FROM PRODUCT;
 
 
 
-SELECT P.product_name,
+SELECT P.PRODUCT_NAME,
 S.YEAR,
-S.price
-FROM Sales S, Product P
-WHERE S.product_id = P.product_id; --DONT NEED LEFT OUTER JOIN
+S.PRICE
+FROM SALES S, PRODUCT P
+WHERE S.PRODUCT_ID = P.PRODUCT_ID;

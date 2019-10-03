@@ -9,7 +9,8 @@ The Employee table holds all employees including their managers. Every employee 
 | 3  | Sam   | 60000  | NULL      |
 | 4  | Max   | 90000  | NULL      |
 +----+-------+--------+-----------+
-Given the Employee table, write a SQL query that finds out employees who earn more than their managers. For the above table, Joe is the only employee who earns more than his manager.
+Given the Employee table, write a SQL query that finds out employees who earn more than their managers. 
+For the above table, Joe is the only employee who earns more than his manager.
 
 +----------+
 | Employee |
@@ -18,39 +19,19 @@ Given the Employee table, write a SQL query that finds out employees who earn mo
 +----------+
 */
 
-CREATE TABLE Employee (Id int, Name varchar(255), Salary int, ManagerId int);
-TRUNCATE TABLE Employee;
+CREATE TABLE EMPLOYEE (ID INT, NAME VARCHAR(255), SALARY INT, MANAGERID INT);
+TRUNCATE TABLE EMPLOYEE;
 
 INSERT ALL
-INTO Employee (Id, Name, Salary, ManagerId) VALUES ('1', 'Joe', '70000', '3')
-INTO Employee (Id, Name, Salary, ManagerId) VALUES ('2', 'Henry', '80000', '4')
-INTO Employee (Id, Name, Salary) VALUES ('3', 'Sam', '60000')
-INTO Employee (Id, Name, Salary) VALUES ('4', 'Max', '90000')
+INTO EMPLOYEE (ID, NAME, SALARY, MANAGERID) VALUES ('1', 'JOE', '70000', '3')
+INTO EMPLOYEE (ID, NAME, SALARY, MANAGERID) VALUES ('2', 'HENRY', '80000', '4')
+INTO EMPLOYEE (ID, NAME, SALARY) VALUES ('3', 'SAM', '60000')
+INTO EMPLOYEE (ID, NAME, SALARY) VALUES ('4', 'MAX', '90000')
 SELECT * FROM DUAL;
-SELECT * FROM Employee;
-
-SELECT *
-FROM Employee E, Employee M --Employee and Manager
-WHERE E.ManagerId = M.Id (+); --Id of the Manager tablecan be null
+SELECT * FROM EMPLOYEE;
 
 
 -- [METHOD 1]
-SELECT E.Name AS Employee
-FROM Employee E, Employee M
-WHERE 1=1
-AND E.ManagerId= M.Id (+) --Id of the Manager tablecan be null
-AND E.Salary > M.Salary
-/*
-1) E.ManagerId IS NOT NULL : is not needed
-=> when searching COLUMN_NAME='ABC', 
-if the data is NULL, it will not be selected (NULL is excluded automatically)
-2) E.ManagerId != NULL (X)
-3) don't need outer join
-=> don't have to consider when there is no manager (i.e. itself is manager)
-*/
-
-
--- [METHOD 2]
 SELECT E.Name AS Employee
 FROM Employee E, Employee M
 WHERE 1=1
@@ -59,7 +40,7 @@ AND E.Salary > M.Salary
 
 
 
---[METHOD 3]
+--[METHOD 2]
 SELECT E.NAME AS EMPLOYEE
 FROM EMPLOYEE E
 WHERE EXISTS (

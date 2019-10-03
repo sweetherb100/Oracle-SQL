@@ -1,6 +1,5 @@
 /*
 Write a SQL query to delete all duplicate email entries in a table named Person, keeping only unique emails based on its smallest Id.
-
 +----+------------------+
 | Id | Email            |
 +----+------------------+
@@ -9,8 +8,9 @@ Write a SQL query to delete all duplicate email entries in a table named Person,
 | 3  | john@example.com |
 +----+------------------+
 Id is the primary key column for this table.
-For example, after running your query, the above Person table should have the following rows:
 
+
+For example, after running your query, the above Person table should have the following rows:
 +----+------------------+
 | Id | Email            |
 +----+------------------+
@@ -18,50 +18,40 @@ For example, after running your query, the above Person table should have the fo
 | 2  | bob@example.com  |
 +----+------------------+
 Note:
-
 Your output is the whole Person table after executing your sql. Use delete statement.
-
 */
 
-DROP TABLE Person;
-CREATE TABLE Person (Id int, Email varchar(255));
-TRUNCATE TABLE Person;
+DROP TABLE PERSON;
+CREATE TABLE PERSON (ID INT, EMAIL VARCHAR(255));
+TRUNCATE TABLE PERSON;
 
 INSERT ALL
-INTO Person (Id, Email) VALUES ('1', 'john@example.com')
-INTO Person (Id, Email) VALUES ('2', 'bob@example.com')
-INTO Person (Id, Email) VALUES ('3', 'john@example.com')
+INTO PERSON (ID, EMAIL) VALUES ('1', 'JOHN@EXAMPLE.COM')
+INTO PERSON (ID, EMAIL) VALUES ('2', 'BOB@EXAMPLE.COM')
+INTO PERSON (ID, EMAIL) VALUES ('3', 'JOHN@EXAMPLE.COM')
 SELECT * FROM DUAL;
-SELECT * FROM Person;
+SELECT * FROM PERSON;
 
 
 
---[MYSQL] BUT IT IS NOT POSSIBLE IN ORACLE SO IN THE END, NOT RECOMMENDED!!
--- join forces you to use "DELETE A FROM TABLE A, TABLE B" 
-DELETE A --join forces you to use like this way
-FROM Person A, Person B
-WHERE A.Email=B.Email --self-join
-AND A.Id > B.Id;
-
---[ORACLE]
+--FINAL
 DELETE FROM PERSON
 WHERE ID NOT IN (
                   SELECT ID
                   FROM (
-                        SELECT MIN(P.ID) ID --CAN USE MIN BECAUSE I USED GROUP BY!!
+                        SELECT MIN(P.ID) ID
                         FROM PERSON P
                         GROUP BY P.EMAIL
                        ) A --temp table
-                  )
+                  );
 
 
 --[REFERENCE] DOESN'T WORK!!
 -- => it is because I am asking to delete while I am referencing to my own table
 -- => so I need to make it into temp table, therefore need temp table A
-
-DELETE FROM Person
-WHERE Id NOT IN (
-                SELECT MIN(Id) AS Id
-                FROM Person
-                GROUP BY Email
-                )
+DELETE FROM PERSON
+WHERE ID NOT IN (
+                SELECT MIN(ID) AS ID
+                FROM PERSON
+                GROUP BY EMAIL
+                );

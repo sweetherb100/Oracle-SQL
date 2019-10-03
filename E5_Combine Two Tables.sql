@@ -26,13 +26,13 @@ Write a SQL query for a report that provides the following information for each 
 FirstName, LastName, City, State
 */
 
-DROP TABLE Person;
-CREATE TABLE Person (PersonId int, FirstName varchar(255), LastName varchar(255));
-CREATE TABLE Address (AddressId int, PersonId int, City varchar(255), State varchar(255));
-TRUNCATE TABLE Person;
-INSERT INTO Person (PersonId, LastName, FirstName) VALUES ('1', 'Wang', 'Allen');
-TRUNCATE TABLE Address;
-INSERT INTO Address (AddressId, PersonId, City, State) VALUES ('1', '2', 'New York City', 'New York');
+DROP TABLE PERSON;
+CREATE TABLE PERSON (PERSONID INT, FIRSTNAME VARCHAR(255), LASTNAME VARCHAR(255));
+CREATE TABLE ADDRESS (ADDRESSID INT, PERSONID INT, CITY VARCHAR(255), STATE VARCHAR(255));
+TRUNCATE TABLE PERSON;
+INSERT INTO PERSON (PERSONID, LASTNAME, FIRSTNAME) VALUES ('1', 'WANG', 'ALLEN');
+TRUNCATE TABLE ADDRESS;
+INSERT INTO ADDRESS (ADDRESSID, PERSONID, CITY, STATE) VALUES ('1', '2', 'NEW YORK CITY', 'NEW YORK');
 
 
 --[METHOD 1]

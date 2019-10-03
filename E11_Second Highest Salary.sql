@@ -18,78 +18,60 @@ For example, given the above Employee table, the query should return 200 as the 
 */
 
 DROP TABLE EMPLOYEE;
-CREATE TABLE Employee (Id int, Salary int);
-TRUNCATE TABLE Employee;
+CREATE TABLE EMPLOYEE (ID INT, SALARY INT);
+TRUNCATE TABLE EMPLOYEE;
 INSERT ALL
-INTO Employee (Id, Salary) VALUES ('1', '100')
-INTO Employee (Id, Salary) VALUES ('2', '100')
-INTO Employee (Id, Salary) VALUES ('3', '200')
-INTO Employee (Id, Salary) VALUES ('4', '300')
-INTO Employee (Id, Salary) VALUES ('5', '300')
+INTO EMPLOYEE (ID, SALARY) VALUES ('1', '100')
+INTO EMPLOYEE (ID, SALARY) VALUES ('2', '100')
+INTO EMPLOYEE (ID, SALARY) VALUES ('3', '200')
+INTO EMPLOYEE (ID, SALARY) VALUES ('4', '300')
+INTO EMPLOYEE (ID, SALARY) VALUES ('5', '300')
 SELECT * FROM DUAL;
 SELECT * FROM EMPLOYEE;
 
---MAYBE I DON'T HAVE TO USE ROWNUM DIRECTLY BUT CAN WORK WITH MIN/MAX (DONT NEED TO USE GROUP BY)
-SELECT * 
+SELECT SALARY
+FROM
+(
+SELECT ID,
+SALARY,
+DENSE_RANK() OVER (ORDER BY SALARY) RRR,
+RANK() OVER (ORDER BY SALARY) R
 FROM EMPLOYEE
-WHERE ROWNUM <2; --ROWNUM 
-
-
---Exception: [1, 100], [2, 100]
-SELECT SecondHighestSalary
-FROM (
-	SELECT 
-	LEAD(Salary,1) OVER (ORDER BY Salary) AS SecondHighestSalary
-	FROM EMPLOYEE
-	ORDER BY Salary
-	)
-WHERE ROWNUM=1;
+)
+WHERE RRR = 2;
 
 
 --NOT WORKING!! THERE CAN BE SAME SALARY SO I SHOULDNT USE LEAD/LAG
 SELECT 
-LEAD(Salary,1) OVER (ORDER BY Salary) AS SecondHighestSalary
+LEAD(SALARY,1) OVER (ORDER BY SALARY) AS SECONDHIGHESTSALARY
 FROM EMPLOYEE
-ORDER BY Salary
+ORDER BY SALARY
 WHERE ROWNUM=1;
-			
---DOESNT NEED GROUP BY
-SELECT MAX(SALARY)
-FROM EMPLOYEE;
-
-
 
 
 --[METHOD 1]: key is "second largest"
-SELECT MAX(Salary) as SecondHighestSalary
-FROM Employee
-WHERE Salary < (
-                SELECT MAX(salary)
-                FROM Employee
+SELECT MAX(SALARY) AS SECONDHIGHESTSALARY
+FROM EMPLOYEE
+WHERE SALARY < (
+				SELECT MAX(SALARY)
+                FROM EMPLOYEE
                 );
 
-SELECT MAX(SALARY) AS SecondHighestSalary
+SELECT MAX(SALARY) AS SECONDHIGHESTSALARY
 FROM EMPLOYEE
 WHERE SALARY NOT IN (
 					SELECT MAX(SALARY)
 					FROM EMPLOYEE
-				);
-
-			
-			
---[METHOD 2] TOO DIFFICULT TO UNDERSTAND
-SELECT NVL(
-           (
-            SELECT SALARY
-              FROM 
-                   (
-                    SELECT ID
-                         , SALARY
-                         , DENSE_RANK () OVER (ORDER BY SALARY DESC) RN
-                      FROM EMPLOYEE
-                   ) A
-            WHERE RN = 2
-              AND ROWNUM = 1
-           ), NULL
-     ) AS "SecondHighestSalary"
- FROM DUAL
+					);
+		
+	
+--[METHOD 2] DENSE_RANK()
+SELECT SALARY SecondHighestSalary
+FROM
+(
+	SELECT ID,
+	SALARY,
+	DENSE_RANK() OVER (ORDER BY SALARY) DRK
+	FROM EMPLOYEE
+)
+WHERE DRK = 2;

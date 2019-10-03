@@ -1,6 +1,5 @@
 /*
 Write a SQL query to find all duplicate emails in a table named Person.
-
 +----+---------+
 | Id | Email   |
 +----+---------+
@@ -8,6 +7,7 @@ Write a SQL query to find all duplicate emails in a table named Person.
 | 2  | c@d.com |
 | 3  | a@b.com |
 +----+---------+
+
 For example, your query should return the following for the above table:
 
 +---------+
@@ -18,14 +18,14 @@ For example, your query should return the following for the above table:
 Note: All emails are in lowercase.
 */
 
-CREATE TABLE Person (Id int, Email varchar(255));
-TRUNCATE TABLE Person;
+CREATE TABLE PERSON (ID INT, EMAIL VARCHAR(255));
+TRUNCATE TABLE PERSON;
 INSERT ALL 
-INTO Person (Id, Email) VALUES ('1', 'a@b.com')
-INTO Person (Id, Email) VALUES ('2', 'c@d.com')
-INTO Person (Id, Email) VALUES ('3', 'a@b.com')
+INTO PERSON (ID, EMAIL) VALUES ('1', 'A@B.COM')
+INTO PERSON (ID, EMAIL) VALUES ('2', 'C@D.COM')
+INTO PERSON (ID, EMAIL) VALUES ('3', 'A@B.COM')
 SELECT * FROM DUAL;
-SELECT * FROM Person;
+SELECT * FROM PERSON;
 
 
 SELECT EMAIL

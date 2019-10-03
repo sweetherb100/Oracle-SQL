@@ -21,31 +21,33 @@ my_numbers
 
 */
 
-DROP TABLE my_numbers;
-CREATE TABLE my_numbers (num int);
-TRUNCATE TABLE my_numbers;
+DROP TABLE MY_NUMBERS;
+CREATE TABLE MY_NUMBERS (NUM INT);
+TRUNCATE TABLE MY_NUMBERS;
 INSERT ALL
-INTO my_numbers (num) VALUES ('8')
-INTO my_numbers (num) VALUES ('8')
-INTO my_numbers (num) VALUES ('3')
-INTO my_numbers (num) VALUES ('3')
-INTO my_numbers (num) VALUES ('1')
-INTO my_numbers (num) VALUES ('4')
-INTO my_numbers (num) VALUES ('5')
-INTO my_numbers (num) VALUES ('6')
+INTO MY_NUMBERS (NUM) VALUES ('8')
+INTO MY_NUMBERS (NUM) VALUES ('8')
+INTO MY_NUMBERS (NUM) VALUES ('3')
+INTO MY_NUMBERS (NUM) VALUES ('3')
+INTO MY_NUMBERS (NUM) VALUES ('1')
+INTO MY_NUMBERS (NUM) VALUES ('4')
+INTO MY_NUMBERS (NUM) VALUES ('5')
+INTO MY_NUMBERS (NUM) VALUES ('6')
 SELECT * FROM DUAL;
-SELECT * FROM my_numbers;
+SELECT * FROM MY_NUMBERS;
 
-SELECT num --max(num) is WRONG!
-FROM my_numbers
-GROUP BY num
-HAVING count(num) = 1;
+--WRONG
+SELECT NUM --MAX(NUM) IS WRONG!
+FROM MY_NUMBERS
+GROUP BY NUM
+HAVING COUNT(NUM) = 1;
 
-SELECT max(num)
+--FINAL
+SELECT MAX(NUM)
 FROM
 (
-	SELECT num
-	FROM my_numbers
-	GROUP BY num
-	HAVING count(num) = 1
+	SELECT NUM
+	FROM MY_NUMBERS
+	GROUP BY NUM
+	HAVING COUNT(NUM) = 1
 );

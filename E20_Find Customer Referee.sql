@@ -24,24 +24,33 @@ For the sample data above, the result is:
 | Zack |
 +------+*/
 
-DROP TABLE customer;
-CREATE TABLE customer (id int, name varchar(255), referee_id int);
-TRUNCATE TABLE customer;
+DROP TABLE CUSTOMER;
+CREATE TABLE CUSTOMER (ID INT, NAME VARCHAR(255), REFEREE_ID INT);
+TRUNCATE TABLE CUSTOMER;
 INSERT ALL
-INTO customer (id, name) VALUES ('1', 'Will')
-INTO customer (id, name) VALUES ('2', 'Jane')
-INTO customer (id, name, referee_id) VALUES ('3', 'Alex', '2')
-INTO customer (id, name) VALUES ('4', 'Bill')
-INTO customer (id, name, referee_id) VALUES ('5', 'Zack', '1')
-INTO customer (id, name, referee_id) VALUES ('6', 'Mark', '2') 
+INTO CUSTOMER (ID, NAME) VALUES ('1', 'WILL')
+INTO CUSTOMER (ID, NAME) VALUES ('2', 'JANE')
+INTO CUSTOMER (ID, NAME, REFEREE_ID) VALUES ('3', 'ALEX', '2')
+INTO CUSTOMER (ID, NAME) VALUES ('4', 'BILL')
+INTO CUSTOMER (ID, NAME, REFEREE_ID) VALUES ('5', 'ZACK', '1')
+INTO CUSTOMER (ID, NAME, REFEREE_ID) VALUES ('6', 'MARK', '2') 
 SELECT * FROM DUAL;
-SELECT * FROM customer;
+SELECT * FROM CUSTOMER;
 
 SELECT NAME
 FROM CUSTOMER
 WHERE REFEREE_ID != '2'; --BE CAREFUL! IT ALSO ELMINATES THE ONES WITH NULL
 
+--[METHOD 1]
 SELECT NAME
 FROM CUSTOMER
 WHERE REFEREE_ID != '2' OR REFEREE_ID IS NULL; --I WAS STUPID TO WRITE AT FIST IS NOT NULL...
+
+--[METHOD 2] More clear than [method 1]
+SELECT NAME
+FROM CUSTOMER
+WHERE ID NOT IN (SELECT ID 
+				FROM CUSTOMER 
+				WHERE REFEREE_ID ='2');
+
 

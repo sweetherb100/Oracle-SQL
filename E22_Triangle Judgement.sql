@@ -13,22 +13,22 @@ For the sample data above, your query should return the follow result:
 | 13 | 15 | 30 | No       |
 | 10 | 20 | 15 | Yes      |*/
 
-DROP TABLE triangle;
-CREATE TABLE triangle (x int, y int, z int);
-TRUNCATE TABLE triangle;
+DROP TABLE TRIANGLE;
+CREATE TABLE TRIANGLE (X INT, Y INT, Z INT);
+TRUNCATE TABLE TRIANGLE;
 INSERT ALL
-INTO triangle (x, y, z) VALUES ('13', '15', '30')
-INTO triangle (x, y, z) VALUES ('10', '20', '15')
+INTO TRIANGLE (X, Y, Z) VALUES ('13', '15', '30')
+INTO TRIANGLE (X, Y, Z) VALUES ('10', '20', '15')
 SELECT * FROM DUAL;
-SELECT * FROM triangle;
+SELECT * FROM TRIANGLE;
 
-SELECT x+y+z - GREATEST(x,y,z) sum_two_sides,
-GREATEST(x,y,z) longest,
---x+y+z-GREATEST(x,y,z) > GREATEST(x,y,z)
+SELECT X+Y+Z - GREATEST(X,Y,Z) SUM_TWO_SIDES,
+GREATEST(X,Y,Z) LONGEST,
+--X+Y+Z-GREATEST(X,Y,Z) > GREATEST(X,Y,Z)
 CASE
-	WHEN x+y+z-GREATEST(x,y,z) > GREATEST(x,y,z)
-	THEN 'yes'
-	ELSE 'no'
-END triangle
-FROM triangle;
+	WHEN X+Y+Z-GREATEST(X,Y,Z) > GREATEST(X,Y,Z)
+	THEN 'YES'
+	ELSE 'NO'
+END TRIANGLE
+FROM TRIANGLE;
 

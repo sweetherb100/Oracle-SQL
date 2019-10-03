@@ -44,46 +44,46 @@ Result table:
 +---------------------------+ 
 User 1 and 2 each had 1 session in the past 30 days while user 3 had 2 sessions so the average is (1 + 1 + 2) / 3 = 1.33.*/
 
-DROP TABLE Activity;
-CREATE TABLE Activity (user_id int, session_id int, activity_date date, activity_type varchar(255));
-TRUNCATE TABLE Activity;
+DROP TABLE ACTIVITY;
+CREATE TABLE ACTIVITY (USER_ID INT, SESSION_ID INT, ACTIVITY_DATE DATE, ACTIVITY_TYPE VARCHAR(255));
+TRUNCATE TABLE ACTIVITY;
 INSERT ALL
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'scroll_down')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'end_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('2', '4', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'send_message')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'end_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'send_message')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'end_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '5', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '5', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'scroll_down')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('3', '5', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'end_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'open_session')
-INTO Activity (user_id, session_id, activity_date, activity_type) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'end_session')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'SCROLL_DOWN')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('1', '1', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'END_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('2', '4', TO_DATE('2019-07-20', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'SEND_MESSAGE')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('2', '4', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'END_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'SEND_MESSAGE')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '2', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'END_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '5', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '5', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'SCROLL_DOWN')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('3', '5', TO_DATE('2019-07-21', 'YYYY-MM-DD'), 'END_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'OPEN_SESSION')
+INTO ACTIVITY (USER_ID, SESSION_ID, ACTIVITY_DATE, ACTIVITY_TYPE) VALUES ('4', '3', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'END_SESSION')
 SELECT * FROM DUAL;
-SELECT * FROM Activity;
+SELECT * FROM ACTIVITY;
 
-SELECT DISTINCT user_id,
-session_id
+SELECT DISTINCT USER_ID,
+SESSION_ID
 FROM ACTIVITY
-WHERE activity_date >= TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30
-AND activity_date <= TO_DATE('2019-07-27', 'YYYY-MM-DD');
+WHERE ACTIVITY_DATE >= TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30
+AND ACTIVITY_DATE <= TO_DATE('2019-07-27', 'YYYY-MM-DD');
 
 
-SELECT round(avg(CNT_session),2) average_sessions_per_user
+SELECT ROUND(AVG(CNT_SESSION),2) AVERAGE_SESSIONS_PER_USER
 FROM
 (
-	SELECT user_id,
-	count(session_id) CNT_session
+	SELECT USER_ID,
+	COUNT(SESSION_ID) CNT_SESSION
 	FROM
 	(
-		SELECT DISTINCT user_id, --use distinct because they all have other activity_type
-		session_id
+		SELECT DISTINCT USER_ID, --USE DISTINCT BECAUSE THEY ALL HAVE OTHER ACTIVITY_TYPE
+		SESSION_ID
 		FROM ACTIVITY
-		WHERE activity_date >= TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30
-		AND activity_date <= TO_DATE('2019-07-27', 'YYYY-MM-DD')
+		WHERE ACTIVITY_DATE >= TO_DATE('2019-07-27', 'YYYY-MM-DD') - 30
+		AND ACTIVITY_DATE <= TO_DATE('2019-07-27', 'YYYY-MM-DD')
 	)
-	GROUP BY user_id
+	GROUP BY USER_ID
 );
