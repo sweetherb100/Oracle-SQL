@@ -1,5 +1,6 @@
 /*
 Write a SQL query to rank scores. 
+
 If there is a tie between two scores, both should have the same ranking. 
 Note that after a tie, the next ranking number should be the next consecutive integer value. 
 In other words, there should be no "holes" between ranks.
@@ -28,15 +29,15 @@ For example, given the above Scores table, your query should generate the follow
 +-------+------+
 */
 
-CREATE TABLE Scores (Id int, Score DECIMAL(3,2));
-TRUNCATE TABLE Scores;
+CREATE TABLE SCORES (ID INT, SCORE DECIMAL(3,2));
+TRUNCATE TABLE SCORES;
 INSERT ALL
-INTO Scores (Id, Score) VALUES ('1', '3.5')
-INTO Scores (Id, Score) VALUES ('2', '3.65')
-INTO Scores (Id, Score) VALUES ('3', '4.0')
-INTO Scores (Id, Score) VALUES ('4', '3.85')
-INTO Scores (Id, Score) VALUES ('5', '4.0')
-INTO Scores (Id, Score) VALUES ('6', '3.65')
+INTO SCORES (ID, SCORE) VALUES ('1', '3.5')
+INTO SCORES (ID, SCORE) VALUES ('2', '3.65')
+INTO SCORES (ID, SCORE) VALUES ('3', '4.0')
+INTO SCORES (ID, SCORE) VALUES ('4', '3.85')
+INTO SCORES (ID, SCORE) VALUES ('5', '4.0')
+INTO SCORES (ID, SCORE) VALUES ('6', '3.65')
 SELECT * FROM DUAL;
 SELECT * FROM SCORES;
 
@@ -47,7 +48,8 @@ FROM SCORES
 ORDER BY SCORE DESC;
 
 
-SELECT ROUND(SCORE,2) AS SCORE, --I NEEED TO WRITE ROUND TO GET SUCCESS BUT DONT KNOW WHY
+--COMPARE WITH DENSE_RANK()
+SELECT ROUND(SCORE,2) AS SCORE,
 RANK() OVER(ORDER BY SCORE DESC) AS RANK
 FROM SCORES
 ORDER BY SCORE DESC;

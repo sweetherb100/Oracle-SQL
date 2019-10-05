@@ -42,40 +42,34 @@ For the player with id 1, 5 + 6 = 11 games played by 2016-05-02, and 5 + 6 + 1 =
 For the player with id 3, 0 + 5 = 5 games played by 2018-07-03.
 Note that for each player we only care about the days when the player logged in.
 */
-
-DROP TABLE Activity;
-CREATE TABLE Activity (player_id int, device_id int, event_date date, games_played int);
-TRUNCATE TABLE Activity;
+DROP TABLE ACTIVITY;
+CREATE TABLE ACTIVITY (PLAYER_ID INT, DEVICE_ID INT, EVENT_DATE DATE, GAMES_PLAYED INT);
+TRUNCATE TABLE ACTIVITY;
 INSERT ALL
-INTO Activity (player_id, device_id, event_date, games_played) VALUES ('1', '2', TO_DATE('2016-03-01','YYYY-MM-DD'), '5')
-INTO Activity (player_id, device_id, event_date, games_played) VALUES ('1', '2', TO_DATE('2016-05-02','YYYY-MM-DD'), '6')
-INTO Activity (player_id, device_id, event_date, games_played) VALUES ('1', '3', TO_DATE('2017-06-25','YYYY-MM-DD'), '1')
-INTO Activity (player_id, device_id, event_date, games_played) VALUES ('3', '1', TO_DATE('2016-03-02','YYYY-MM-DD'), '0')
-INTO Activity (player_id, device_id, event_date, games_played) VALUES ('3', '4', TO_DATE('2018-07-03','YYYY-MM-DD'), '5')
+INTO ACTIVITY (PLAYER_ID, DEVICE_ID, EVENT_DATE, GAMES_PLAYED) VALUES ('1', '2', TO_DATE('2016-03-01','YYYY-MM-DD'), '5')
+INTO ACTIVITY (PLAYER_ID, DEVICE_ID, EVENT_DATE, GAMES_PLAYED) VALUES ('1', '2', TO_DATE('2016-05-02','YYYY-MM-DD'), '6')
+INTO ACTIVITY (PLAYER_ID, DEVICE_ID, EVENT_DATE, GAMES_PLAYED) VALUES ('1', '3', TO_DATE('2017-06-25','YYYY-MM-DD'), '1')
+INTO ACTIVITY (PLAYER_ID, DEVICE_ID, EVENT_DATE, GAMES_PLAYED) VALUES ('3', '1', TO_DATE('2016-03-02','YYYY-MM-DD'), '0')
+INTO ACTIVITY (PLAYER_ID, DEVICE_ID, EVENT_DATE, GAMES_PLAYED) VALUES ('3', '4', TO_DATE('2018-07-03','YYYY-MM-DD'), '5')
 SELECT * FROM DUAL;
-SELECT * FROM Activity;
+SELECT * FROM ACTIVITY;
 
--- http://www.sqltutorial.org/sql-rollup/
---TRIAL
-SELECT player_id, 
-event_date, 
-SUM(games_played)
-FROM Activity
-GROUP BY player_id, event_date;
+--it is like cumulative sum grouped by PLAYER_ID
+--[METHOD 1]
+SELECT PLAYER_ID,
+EVENT_DATE,
+SUM(GAMES_PLAYED) OVER (PARTITION BY PLAYER_ID ORDER BY EVENT_DATE) GAMES_PLAYED_SO_FAR
+FROM ACTIVITY;
 
---WRONG (2): in this case, rollup doesn't work
-SELECT player_id, 
-event_date, 
-SUM(games_played)
-FROM Activity
-GROUP BY player_id, ROLLUP (event_date);
 
---CREATIVE WAY!!!! "SCALAR SUB QUERY"
+--[METHOD 2] "SCALAR SUB QUERY"
 SELECT A.PLAYER_ID, 
 A.EVENT_DATE, 
-(SELECT SUM(A1.GAMES_PLAYED) --I can make TEMP-SELECT at SELECT also using TABLE ALIAS from FROM
-FROM ACTIVITY A1 
-WHERE A1.PLAYER_ID = A.PLAYER_ID 
-AND A1.EVENT_DATE <= A.EVENT_DATE) --SUM until A.EVENT_DATE
+(
+	SELECT SUM(A1.GAMES_PLAYED) --I can make TEMP-SELECT at SELECT also using TABLE ALIAS from FROM
+	FROM ACTIVITY A1 
+	WHERE A1.PLAYER_ID = A.PLAYER_ID 
+	AND A1.EVENT_DATE <= A.EVENT_DATE
+) --SUM until A.EVENT_DATE
 FROM ACTIVITY A;
 

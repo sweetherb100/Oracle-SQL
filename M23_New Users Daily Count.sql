@@ -10,7 +10,7 @@ There is no primary key for this table, it may have duplicate rows.
 The activity column is an ENUM type of ('login', 'logout', 'jobs', 'groups', 'homepage').
 
 Write an SQL query that reports for every date within at most 90 days from today, 
-the number of users that logged in for the first time on that date. 
+the number of users that logged in for the !!! first time !!! on that date. 
 Assume today is 2019-06-30.
 
 The query result format is in the following example:
@@ -45,53 +45,46 @@ Result table:
 Note that we only care about dates with non zero user count.
 The user with id 5 first logged in on 2019-03-01 so he's not counted on 2019-06-21.*/
 
-
-DROP TABLE Traffic;
-CREATE TABLE Traffic (user_id int, activity varchar(255), activity_date date);
-TRUNCATE TABLE Traffic;
+DROP TABLE TRAFFIC;
+CREATE TABLE TRAFFIC (USER_ID INT, ACTIVITY VARCHAR(255), ACTIVITY_DATE DATE);
+TRUNCATE TABLE TRAFFIC;
 INSERT ALL
-INTO Traffic (user_id, activity, activity_date) VALUES ('1', 'login', TO_DATE('2019-05-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('1', 'homepage', TO_DATE('2019-05-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('1', 'logout', TO_DATE('2019-05-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('2', 'login', TO_DATE('2019-06-21','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('2', 'logout', TO_DATE('2019-06-21','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('3', 'login', TO_DATE('2019-01-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('3', 'jobs', TO_DATE('2019-01-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('3', 'logout', TO_DATE('2019-01-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('4', 'login', TO_DATE('2019-06-21','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('4', 'groups', TO_DATE('2019-06-21','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('4', 'logout', TO_DATE('2019-06-21','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('5', 'login', TO_DATE('2019-03-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('5', 'logout', TO_DATE('2019-03-01','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('5', 'login', TO_DATE('2019-06-21','YYYY-MM-DD'))
-INTO Traffic (user_id, activity, activity_date) VALUES ('5', 'logout', TO_DATE('2019-06-21','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('1', 'LOGIN', TO_DATE('2019-05-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('1', 'HOMEPAGE', TO_DATE('2019-05-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('1', 'LOGOUT', TO_DATE('2019-05-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('2', 'LOGIN', TO_DATE('2019-06-21','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('2', 'LOGOUT', TO_DATE('2019-06-21','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('3', 'LOGIN', TO_DATE('2019-01-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('3', 'JOBS', TO_DATE('2019-01-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('3', 'LOGOUT', TO_DATE('2019-01-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('4', 'LOGIN', TO_DATE('2019-06-21','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('4', 'GROUPS', TO_DATE('2019-06-21','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('4', 'LOGOUT', TO_DATE('2019-06-21','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('5', 'LOGIN', TO_DATE('2019-03-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('5', 'LOGOUT', TO_DATE('2019-03-01','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('5', 'LOGIN', TO_DATE('2019-06-21','YYYY-MM-DD'))
+INTO TRAFFIC (USER_ID, ACTIVITY, ACTIVITY_DATE) VALUES ('5', 'LOGOUT', TO_DATE('2019-06-21','YYYY-MM-DD'))
 SELECT * FROM DUAL;
-SELECT * FROM Traffic;
+SELECT * FROM TRAFFIC;
 
-SELECT user_id,
-min(activity_date)
-FROM traffic
-WHERE activity = 'login'
-GROUP BY user_id
-HAVING min(activity_date) > TO_DATE('2019-06-21','YYYY-MM-DD') -90
-ORDER BY USER_id;
+SELECT USER_ID,
+MIN(ACTIVITY_DATE)
+FROM TRAFFIC
+WHERE ACTIVITY = 'LOGIN'
+GROUP BY USER_ID
+HAVING MIN(ACTIVITY_DATE) > TO_DATE('2019-06-21','YYYY-MM-DD') -90
+ORDER BY USER_ID;
 
-
---2019-03-23
-SELECT TO_DATE('2019-06-21','YYYY-MM-DD') - 90
-FROM dual;
-
-
-SELECT T.activity_date login_date,
-count(T.user_id) user_count
+--FINAL
+SELECT T.ACTIVITY_DATE LOGIN_DATE,
+COUNT(T.USER_ID) USER_COUNT
 FROM 
 (
-SELECT user_id,
-min(activity_date) activity_date
-FROM traffic
-WHERE activity = 'login'
-GROUP BY user_id
-HAVING min(activity_date) > TO_DATE('2019-06-21','YYYY-MM-DD') -90
-ORDER BY USER_id
+	SELECT USER_ID,
+	MIN(ACTIVITY_DATE) ACTIVITY_DATE
+	FROM TRAFFIC
+	WHERE ACTIVITY = 'LOGIN'
+	GROUP BY USER_ID
+	HAVING MIN(ACTIVITY_DATE) > TO_DATE('2019-06-21','YYYY-MM-DD') -90 --2019-03-23
 ) T
-GROUP BY T.activity_date
+GROUP BY T.ACTIVITY_DATE;

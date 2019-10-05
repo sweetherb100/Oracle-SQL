@@ -48,40 +48,40 @@ The Output should be:
 | Science     | 1              |
 | Law         | 0              |*/
 
-DROP TABLE student;
-CREATE TABLE student (student_id int, student_name varchar(255), gender varchar(255), dept_id int);
-TRUNCATE TABLE student;
+DROP TABLE STUDENT;
+CREATE TABLE STUDENT (STUDENT_ID INT, STUDENT_NAME VARCHAR(255), GENDER VARCHAR(255), DEPT_ID INT);
+TRUNCATE TABLE STUDENT;
 INSERT ALL
-INTO student (student_id, student_name, gender, dept_id) VALUES ('1', 'Jack', 'M', '1')
-INTO student (student_id, student_name, gender, dept_id) VALUES ('2', 'Jane', 'F', '1')
-INTO student (student_id, student_name, gender, dept_id) VALUES ('3', 'Mark', 'M', '2')
+INTO STUDENT (STUDENT_ID, STUDENT_NAME, GENDER, DEPT_ID) VALUES ('1', 'JACK', 'M', '1')
+INTO STUDENT (STUDENT_ID, STUDENT_NAME, GENDER, DEPT_ID) VALUES ('2', 'JANE', 'F', '1')
+INTO STUDENT (STUDENT_ID, STUDENT_NAME, GENDER, DEPT_ID) VALUES ('3', 'MARK', 'M', '2')
 SELECT * FROM DUAL;
-SELECT * FROM student;
+SELECT * FROM STUDENT;
 
-
-DROP TABLE department;
-CREATE TABLE department (dept_id int, dept_name varchar(255));
-TRUNCATE TABLE department;
+DROP TABLE DEPARTMENT;
+CREATE TABLE DEPARTMENT (DEPT_ID INT, DEPT_NAME VARCHAR(255));
+TRUNCATE TABLE DEPARTMENT;
 INSERT ALL
-INTO department (dept_id, dept_name) VALUES ('1', 'Engineering')
-INTO department (dept_id, dept_name) VALUES ('2', 'Science')
-INTO department (dept_id, dept_name) VALUES ('3', 'Law')
+INTO DEPARTMENT (DEPT_ID, DEPT_NAME) VALUES ('1', 'ENGINEERING')
+INTO DEPARTMENT (DEPT_ID, DEPT_NAME) VALUES ('2', 'SCIENCE')
+INTO DEPARTMENT (DEPT_ID, DEPT_NAME) VALUES ('3', 'LAW')
 SELECT * FROM DUAL;
-SELECT * FROM department;
+SELECT * FROM DEPARTMENT;
 
-SELECT count(student_id) cnt_std,
-dept_id
+
+SELECT COUNT(STUDENT_ID) CNT_STD,
+DEPT_ID
 FROM STUDENT
-GROUP BY dept_id;
+GROUP BY DEPT_ID;
 
 
-SELECT D.dept_name,
-NVL(S.cnt_std, 0) student_number
-FROM department D,
+SELECT D.DEPT_NAME,
+NVL(S.CNT_STD, 0) STUDENT_NUMBER
+FROM DEPARTMENT D,
 (
-SELECT count(student_id) cnt_std,
-dept_id
-FROM STUDENT
-GROUP BY dept_id
+	SELECT COUNT(STUDENT_ID) CNT_STD,
+	DEPT_ID
+	FROM STUDENT
+	GROUP BY DEPT_ID
 ) S
-WHERE D.dept_id = S.dept_id (+);
+WHERE D.DEPT_ID = S.DEPT_ID (+);

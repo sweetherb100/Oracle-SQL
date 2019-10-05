@@ -1,7 +1,6 @@
 /*
 The Employee table holds all employees including their managers. 
 Every employee has an Id, and there is also a column for the manager Id.
-
 +------+----------+-----------+----------+
 |Id    |Name 	  |Department |ManagerId |
 +------+----------+-----------+----------+
@@ -13,9 +12,10 @@ Every employee has an Id, and there is also a column for the manager Id.
 |106   |Ron 	  |B 	      |101       |
 +------+----------+-----------+----------+
 
-Given the Employee table, write a SQL query that finds out managers with at least 5 direct report. 
-For the above table, your SQL query should return:
+Given the Employee table, 
+write a SQL query that finds out managers with at least 5 direct report. 
 
+For the above table, your SQL query should return:
 +-------+
 | Name  |
 +-------+
@@ -24,30 +24,25 @@ For the above table, your SQL query should return:
 Note:
 No one would report to himself.
 */
-
-DROP TABLE Employee;
-CREATE TABLE Employee (Id int, Name varchar(255), Department varchar(255), ManagerId int);
-TRUNCATE TABLE Employee;
+DROP TABLE EMPLOYEE;
+CREATE TABLE EMPLOYEE (ID INT, NAME VARCHAR(255), DEPARTMENT VARCHAR(255), MANAGERID INT);
+TRUNCATE TABLE EMPLOYEE;
 INSERT ALL
-INTO Employee (Id, Name, Department, ManagerId) VALUES ('101', 'John', 'A', NULL)
-INTO Employee (Id, Name, Department, ManagerId) VALUES ('102', 'Dan', 'A', '101')
-INTO Employee (Id, Name, Department, ManagerId) VALUES ('103', 'James', 'A', '101')
-INTO Employee (Id, Name, Department, ManagerId) VALUES ('104', 'Amy', 'A', '101')
-INTO Employee (Id, Name, Department, ManagerId) VALUES ('105', 'Anne', 'A', '101')
-INTO Employee (Id, Name, Department, ManagerId) VALUES ('106', 'Ron', 'B', '101')
+INTO EMPLOYEE (ID, NAME, DEPARTMENT, MANAGERID) VALUES ('101', 'JOHN', 'A', NULL)
+INTO EMPLOYEE (ID, NAME, DEPARTMENT, MANAGERID) VALUES ('102', 'DAN', 'A', '101')
+INTO EMPLOYEE (ID, NAME, DEPARTMENT, MANAGERID) VALUES ('103', 'JAMES', 'A', '101')
+INTO EMPLOYEE (ID, NAME, DEPARTMENT, MANAGERID) VALUES ('104', 'AMY', 'A', '101')
+INTO EMPLOYEE (ID, NAME, DEPARTMENT, MANAGERID) VALUES ('105', 'ANNE', 'A', '101')
+INTO EMPLOYEE (ID, NAME, DEPARTMENT, MANAGERID) VALUES ('106', 'RON', 'B', '101')
 SELECT * FROM DUAL;
-SELECT * FROM Employee;
+SELECT * FROM EMPLOYEE;
 
-SELECT *
-FROM Employee E,
-Employee MAN_E
-WHERE E.MANAGERID = MAN_E.Id; --don't need TO be (+) OUTER LEFT JOIN
+SELECT MANAGERID
+FROM EMPLOYEE E
+GROUP BY MANAGERID
+HAVING COUNT(MANAGERID) >= 5;
 
-SELECT ManagerId
-FROM Employee E
-GROUP BY ManagerId
-HAVING COUNT(ManagerId) >= 5;
-
+--FINAL
 SELECT E.NAME
 FROM EMPLOYEE E,
 	(SELECT MANAGERID
@@ -55,3 +50,4 @@ FROM EMPLOYEE E,
 	GROUP BY MANAGERID
 	HAVING COUNT(MANAGERID) >= 5) T
 WHERE T.MANAGERID = E.ID;
+

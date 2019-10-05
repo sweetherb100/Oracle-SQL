@@ -44,34 +44,34 @@ Note
 
 If there is only one node on the tree, you only need to output its root attributes.*/
 
-CREATE TABLE tree (id int, p_id int);
-TRUNCATE TABLE tree;
+CREATE TABLE TREE (ID INT, P_ID INT);
+TRUNCATE TABLE TREE;
 INSERT ALL
-INTO tree (id, p_id) VALUES ('1', null)
-INTO tree (id, p_id) VALUES ('2', '1')
-INTO tree (id, p_id) VALUES ('3', '1')
-INTO tree (id, p_id) VALUES ('4', '2')
-INTO tree (id, p_id) VALUES ('5', '2')
+INTO TREE (ID, P_ID) VALUES ('1', NULL)
+INTO TREE (ID, P_ID) VALUES ('2', '1')
+INTO TREE (ID, P_ID) VALUES ('3', '1')
+INTO TREE (ID, P_ID) VALUES ('4', '2')
+INTO TREE (ID, P_ID) VALUES ('5', '2')
 SELECT * FROM DUAL;
-SELECT * FROM tree;
+SELECT * FROM TREE;
 
 
-SELECT T.id,
+SELECT T.ID,
 CASE
-	WHEN T.p_id IS NULL
-	THEN 'Root'
+	WHEN T.P_ID IS NULL
+	THEN 'ROOT'
 	WHEN C.CNT_CHILD = 2
-	THEN 'Inner'
-	ELSE 'Leaf'
-END AS Type
+	THEN 'INNER'
+	ELSE 'LEAF'
+END AS TYPE
 FROM TREE T,
 (
-	SELECT p_id,
-	count(p_id) CNT_CHILD
-	FROM tree
-	GROUP BY p_id
+	SELECT P_ID,
+	COUNT(P_ID) CNT_CHILD
+	FROM TREE
+	GROUP BY P_ID
 ) C
-WHERE T.id = C.p_id (+)
-ORDER BY T.id;
+WHERE T.ID = C.P_ID (+)
+ORDER BY T.ID;
 
 

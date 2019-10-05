@@ -31,14 +31,14 @@ Note:
 If the number of students is odd, there is no need to change the last one's seat.
 */
 
-CREATE TABLE seat(id int, student varchar(255));
-TRUNCATE TABLE seat;
+CREATE TABLE SEAT(ID INT, STUDENT VARCHAR(255));
+TRUNCATE TABLE SEAT;
 INSERT ALL
-INTO seat (id, student) VALUES ('1', 'Abbot')
-INTO seat (id, student) VALUES ('2', 'Doris')
-INTO seat (id, student) VALUES ('3', 'Emerson')
-INTO seat (id, student) VALUES ('4', 'Green')
-INTO seat (id, student) VALUES ('5', 'Jeames')
+INTO SEAT (ID, STUDENT) VALUES ('1', 'ABBOT')
+INTO SEAT (ID, STUDENT) VALUES ('2', 'DORIS')
+INTO SEAT (ID, STUDENT) VALUES ('3', 'EMERSON')
+INTO SEAT (ID, STUDENT) VALUES ('4', 'GREEN')
+INTO SEAT (ID, STUDENT) VALUES ('5', 'JEAMES')
 SELECT * FROM DUAL;
 SELECT * FROM SEAT;
 
@@ -47,26 +47,31 @@ SELECT * FROM SEAT;
 --[METHOD 1]
 --I CAN MAKE TEMP TABLE JUST FOR COUNT
 SELECT (CASE 
-	  WHEN MOD(ID,2)=0 THEN ID-1
-      WHEN MOD(ID,2)=1 AND ID=C.CNT THEN ID --if last row
-      WHEN MOD(ID,2)=1 AND ID != C.CNT THEN ID+1
+	  WHEN MOD(ID,2)=0 
+	  THEN ID-1
+      WHEN MOD(ID,2)=1 AND ID=C.CNT 
+      THEN ID --if last row
+      WHEN MOD(ID,2)=1 AND ID != C.CNT 
+      THEN ID+1
 	  END) AS ID,
 STUDENT
-FROM SEAT S, (
-			SELECT COUNT(ID) AS CNT
-  			FROM SEAT
-  			) C
+FROM SEAT S, 
+(
+	SELECT COUNT(ID) AS CNT
+	FROM SEAT
+) C
 ORDER BY ID
 
 
 --[METHOD 2]
 SELECT ID, 
 DECODE(M, 0, PRE_S, NVL(PST_S, STUDENT)) STUDENT --NVL IS NEEDED FOR THE LAST ODD NUM OF ROW
-FROM (
-        SELECT ID
-             , MOD(ID,2) M
-             , STUDENT
-             , LAG (STUDENT) OVER (ORDER BY ID) PRE_S
-             , LEAD(STUDENT) OVER (ORDER BY ID) PST_S
-          FROM SEAT
-       )
+FROM 
+(
+	SELECT ID, 
+	MOD(ID,2) M,
+	STUDENT,
+	LAG (STUDENT) OVER (ORDER BY ID) PRE_S,
+	LEAD(STUDENT) OVER (ORDER BY ID) PST_S
+	FROM SEAT
+)

@@ -62,70 +62,82 @@ Result table: [yulkyu recommendation]
 +------------+------------+----------+-------+
 */
 
-DROP TABLE Sales;
-CREATE TABLE Sales (sale_id int, product_id int, year int, quantity int, price int);
-TRUNCATE TABLE Sales;
+DROP TABLE SALES;
+CREATE TABLE SALES (SALE_ID INT, PRODUCT_ID INT, YEAR INT, QUANTITY INT, PRICE INT);
+TRUNCATE TABLE SALES;
 INSERT ALL 
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('1', '100', '2008', '10', '5000')
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('2', '100', '2009', '12', '5000')
-INTO Sales (sale_id, product_id, year, quantity, price) VALUES ('7', '200', '2011', '15', '9000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('1', '100', '2008', '10', '5000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('2', '100', '2009', '12', '5000')
+INTO SALES (SALE_ID, PRODUCT_ID, YEAR, QUANTITY, PRICE) VALUES ('7', '200', '2011', '15', '9000')
 SELECT * FROM DUAL;
-SELECT * FROM Sales;
+SELECT * FROM SALES;
 
-DROP TABLE Product;
-CREATE TABLE Product (product_id int, product_name varchar(255));
-TRUNCATE TABLE Product;
+DROP TABLE PRODUCT;
+CREATE TABLE PRODUCT (PRODUCT_ID INT, PRODUCT_NAME VARCHAR(255));
+TRUNCATE TABLE PRODUCT;
 INSERT ALL 
-INTO Product (product_id, product_name) VALUES ('100', 'Nokia')
-INTO Product (product_id, product_name) VALUES ('200', 'Apple')
-INTO Product (product_id, product_name) VALUES ('300', 'Samsung')
+INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME) VALUES ('100', 'NOKIA')
+INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME) VALUES ('200', 'APPLE')
+INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME) VALUES ('300', 'SAMSUNG')
 SELECT * FROM DUAL;
-SELECT * FROM Product;
-
-SELECT product_id,
-min(YEAR)
-FROM SALES
-GROUP BY product_id;
+SELECT * FROM PRODUCT;
 
 
---but why I don't use product table?!?!
-SELECT S.product_id, 
-S.year, 
-S.quantity, 
-S.price
-FROM SALES S,
+SELECT *
+FROM
 (
-SELECT product_id,
-min(YEAR) year
-FROM SALES
-GROUP BY product_id
-) SS
-WHERE S.PRODUCT_ID = SS.product_id
-AND s.YEAR = SS.YEAR;
+	SELECT PRODUCT_ID,
+	YEAR, 
+	QUANTITY,
+	PRICE,
+	RANK() OVER (PARTITION BY PRODUCT_ID ORDER BY YEAR) RNK_YEAR
+	FROM SALES
+)
+WHERE RNK_YEAR = 1;
 
+--[METHOD 1]
+SELECT P.PRODUCT_ID,
+S.YEAR,
+S.QUANTITY,
+S.PRICE
+FROM
+PRODUCT P,
+(
+	SELECT *
+	FROM
+	(
+		SELECT PRODUCT_ID,
+		YEAR, 
+		QUANTITY,
+		PRICE,
+		RANK() OVER (PARTITION BY PRODUCT_ID ORDER BY YEAR) RNK_YEAR
+		FROM SALES
+	)
+	WHERE RNK_YEAR = 1
+) S
+WHERE P.PRODUCT_ID = S.PRODUCT_ID (+); --OUTER JOIN
+
+
+--[METHOD 2]
 --yulkyu recommendation result
-SELECT P.PRODUCT_ID, --this should be P not PP (careful!)
+SELECT P.PRODUCT_ID, --THIS SHOULD BE P NOT PP (CAREFUL!)
 PP.YEAR,
-PP.quantity,
-PP.price
-FROM Product P,
+PP.QUANTITY,
+PP.PRICE
+FROM PRODUCT P,
 (
-	SELECT S.product_id, 
-	S.year, 
-	S.quantity, 
-	S.price
+	SELECT S.PRODUCT_ID, 
+	S.YEAR, 
+	S.QUANTITY, 
+	S.PRICE
 	FROM SALES S,
 	(
-	SELECT product_id,
-	min(YEAR) year
-	FROM SALES
-	GROUP BY product_id
+		SELECT PRODUCT_ID,
+		MIN(YEAR) YEAR
+		FROM SALES
+		GROUP BY PRODUCT_ID
 	) SS
-	WHERE S.PRODUCT_ID = SS.product_id
-	AND s.YEAR = SS.YEAR
+	WHERE S.PRODUCT_ID = SS.PRODUCT_ID
+	AND S.YEAR = SS.YEAR
 ) PP
-WHERE P.PRODUCT_ID = PP.product_id (+);
-
-
-
-
+WHERE P.PRODUCT_ID = PP.PRODUCT_ID (+); --OUTER JOIN

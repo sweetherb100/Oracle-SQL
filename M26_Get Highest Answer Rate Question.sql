@@ -29,129 +29,40 @@ question 285 has answer rate 1/1, while question 369 has 0/1 answer rate, so out
 
 Note: The highest answer rate meaning is: answer number's ratio in show number in the same question.*/
 
-DROP TABLE survey;
-CREATE TABLE survey (u_id int, actions varchar(255), question_id int, answer_id int, q_num int, timestamps int);
-TRUNCATE TABLE survey;
+DROP TABLE SURVEY;
+CREATE TABLE SURVEY (U_ID INT, ACTIONS VARCHAR(255), QUESTION_ID INT, ANSWER_ID INT, Q_NUM INT, TIMESTAMPS INT);
+TRUNCATE TABLE SURVEY;
 INSERT ALL
-INTO survey (u_id, actions, question_id, answer_id, q_num, timestamps) VALUES ('5', 'show', '285', NULL, '1', '123')
-INTO survey (u_id, actions, question_id, answer_id, q_num, timestamps) VALUES ('5', 'answer', '285', '124124', '1', '124')
-INTO survey (u_id, actions, question_id, answer_id, q_num, timestamps) VALUES ('5', 'show', '369', NULL, '2', '125')
-INTO survey (u_id, actions, question_id, answer_id, q_num, timestamps) VALUES ('5', 'skip', '369', NULL, '2', '126')
+INTO SURVEY (U_ID, ACTIONS, QUESTION_ID, ANSWER_ID, Q_NUM, TIMESTAMPS) VALUES ('5', 'SHOW', '285', NULL, '1', '123')
+INTO SURVEY (U_ID, ACTIONS, QUESTION_ID, ANSWER_ID, Q_NUM, TIMESTAMPS) VALUES ('5', 'ANSWER', '285', '124124', '1', '124')
+INTO SURVEY (U_ID, ACTIONS, QUESTION_ID, ANSWER_ID, Q_NUM, TIMESTAMPS) VALUES ('5', 'SHOW', '369', NULL, '2', '125')
+INTO SURVEY (U_ID, ACTIONS, QUESTION_ID, ANSWER_ID, Q_NUM, TIMESTAMPS) VALUES ('5', 'SKIP', '369', NULL, '2', '126')
 SELECT * FROM DUAL;
-SELECT * FROM survey;
-
-SELECT *
-FROM SURVEY
-WHERE actions != 'skip';
-
-SELECT question_id,
-count(question_id) show_cnt
-FROM SURVEY
-WHERE actions = 'show'
-GROUP BY question_id;
-
--- But I want the rows even if it is 0
-SELECT question_id,
-count(question_id) answer_cnt
-FROM SURVEY
-WHERE actions = 'answer'
-GROUP BY question_id;
-
-SELECT *
-FROM 
-(
-	SELECT question_id,
-	count(question_id) show_cnt
-	FROM SURVEY
-	WHERE actions = 'show'
-	GROUP BY question_id
-) S,
-(
-	SELECT question_id,
-	count(question_id) answer_cnt
-	FROM SURVEY
-	WHERE actions = 'answer'
-	GROUP BY question_id
-) A
-WHERE S.question_id = A.question_id (+);
-
-SELECT S.question_id,
-NVL(A.answer_cnt,0)/(S.show_cnt) ratio
-FROM 
-(
-	SELECT question_id,
-	count(question_id) show_cnt
-	FROM SURVEY
-	WHERE actions = 'show'
-	GROUP BY question_id
-) S,
-(
-	SELECT question_id,
-	count(question_id) answer_cnt
-	FROM SURVEY
-	WHERE actions = 'answer'
-	GROUP BY question_id
-) A
-WHERE S.question_id = A.question_id (+);
--- ORDER BY NVL(A.answer_cnt,0)/(S.show_cnt) DESC; I could do rownum later but I should also consider it can have a tie
+SELECT * FROM SURVEY;
 
 
-/*SELECT T.question_id
+--[METHOD 1]
+SELECT QUESTION_ID
 FROM
 (
-	SELECT S.question_id,
-	NVL(A.answer_cnt,0)/(S.show_cnt) ratio
-	FROM 
+	SELECT QUESTION_ID,
+	RATIO,
+	RANK() OVER (ORDER BY RATIO DESC) RNK_RATIO
+	FROM
 	(
-		SELECT question_id,
-		count(question_id) show_cnt
+		SELECT QUESTION_ID,
+		COUNT(1) TOT_ACTION,
+		COUNT(CASE WHEN ACTIONS = 'ANSWER' THEN 1 END) TOT_ANSWER,
+		COUNT(CASE WHEN ACTIONS = 'ANSWER' THEN 1 END)/COUNT(1) RATIO
 		FROM SURVEY
-		WHERE actions = 'show'
-		GROUP BY question_id
-	) S,
-	(
-		SELECT question_id,
-		count(question_id) answer_cnt
-		FROM SURVEY
-		WHERE actions = 'answer'
-		GROUP BY question_id
-	) A
-	WHERE S.question_id = A.question_id (+)
-) T
-WHERE T.ratio =(SELECT max(T.ratio) 
-				FROM 
-				(
-					SELECT S.question_id,
-					NVL(A.answer_cnt,0)/(S.show_cnt) ratio
-					FROM 
-					(
-						SELECT question_id,
-						count(question_id) show_cnt
-						FROM SURVEY
-						WHERE actions = 'show'
-						GROUP BY question_id
-					) S,
-					(
-						SELECT question_id,
-						count(question_id) answer_cnt
-						FROM SURVEY
-						WHERE actions = 'answer'
-						GROUP BY question_id
-					) A
-					WHERE S.question_id = A.question_id (+)
-				) T); --too dirty... ALL I want is just to write "(select max(T.ratio) from T)"....*/
-				
-
-SELECT *
-FROM SURVEY S,
-SURVEY A
-WHERE S.actions      = 'show'
-AND A.actions      = 'answer'      
-AND S.QUESTION_ID = A.QUESTION_ID;
+		GROUP BY QUESTION_ID
+	)
+)
+WHERE RNK_RATIO=1;
 
 
---FINAL: Yulkyu stype
---Approach: self-join!
+--[METHOD 2]YULKYU STYLE
+--APPROACH: SELF-JOIN!
 SELECT QUESTION_ID
   FROM (
         SELECT QUESTION_ID, 
@@ -159,12 +70,12 @@ SELECT QUESTION_ID
         		ROW_NUMBER() OVER (ORDER BY SURVEY_LOG DESC) AS RNUM
           FROM (
 				SELECT S.QUESTION_ID, 
-				COUNT(A.u_id)/COUNT(S.u_id) AS SURVEY_LOG
+				COUNT(A.U_ID)/COUNT(S.U_ID) AS SURVEY_LOG
 				FROM SURVEY S,
 				SURVEY A
-				WHERE S.actions      = 'show'
-				AND A.actions      = 'answer'      
-				/*1번: 굳이 OUTER를 안쓴 이유는, answer에 값이 없다는건 아예 답을 한적이 없는 건이니까 빼도 될거 같기 때문*/
+				WHERE S.ACTIONS      = 'SHOW'
+				AND A.ACTIONS      = 'ANSWER'      
+				/*1번: 굳이 OUTER를 안쓴 이유는, ANSWER에 값이 없다는건 아예 답을 한적이 없는 건이니까 빼도 될거 같기 때문*/
 				AND S.QUESTION_ID = A.QUESTION_ID
 				GROUP BY S.QUESTION_ID
 				ORDER BY SURVEY_LOG DESC

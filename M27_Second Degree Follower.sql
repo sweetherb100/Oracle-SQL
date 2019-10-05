@@ -26,32 +26,26 @@ Note:
 Followee would not follow himself/herself in all cases.
 Please display the result in follower alphabet order.*/
 
-DROP TABLE facebook;
-CREATE TABLE facebook (followee varchar(255), follower varchar(255));
-TRUNCATE TABLE facebook;
+DROP TABLE FACEBOOK;
+CREATE TABLE FACEBOOK (FOLLOWEE VARCHAR(255), FOLLOWER VARCHAR(255));
+TRUNCATE TABLE FACEBOOK;
 INSERT ALL
-INTO facebook (followee, follower) VALUES ('A', 'B')
-INTO facebook (followee, follower) VALUES ('B', 'C')
-INTO facebook (followee, follower) VALUES ('B', 'D')
-INTO facebook (followee, follower) VALUES ('D', 'E')
+INTO FACEBOOK (FOLLOWEE, FOLLOWER) VALUES ('A', 'B')
+INTO FACEBOOK (FOLLOWEE, FOLLOWER) VALUES ('B', 'C')
+INTO FACEBOOK (FOLLOWEE, FOLLOWER) VALUES ('B', 'D')
+INTO FACEBOOK (FOLLOWEE, FOLLOWER) VALUES ('D', 'E')
 SELECT * FROM DUAL;
-SELECT * FROM facebook;
+SELECT * FROM FACEBOOK;
 
 --follower becomes followee themselves
-SELECT F1.follower,
-F2.follower
-FROM FACEBOOK F1,
-Facebook F2
-WHERE F1.FOLLOWER = f2.followee;
-
-SELECT T.follower,
-count(T.followee) num
+SELECT T.FOLLOWER,
+COUNT(T.FOLLOWEE) NUM
 FROM
 (
-	SELECT F1.follower follower,
-	F2.follower followee
+	SELECT F1.FOLLOWER FOLLOWER,
+	F2.FOLLOWER FOLLOWEE
 	FROM FACEBOOK F1,
-	Facebook F2
-	WHERE F1.FOLLOWER = f2.followee
+	FACEBOOK F2
+	WHERE F1.FOLLOWER = F2.FOLLOWEE
 ) T
-GROUP BY T.follower;
+GROUP BY T.FOLLOWER;

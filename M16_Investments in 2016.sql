@@ -46,57 +46,57 @@ And its location is the same with the third record, which makes the third record
 So, the result is the sum of TIV_2016 of the first and last record, which is 45.
 */
 
-CREATE TABLE insurance (PID int, TIV_2015 int, TIV_2016 int, LAT int, LON int);
-TRUNCATE TABLE insurance;
+CREATE TABLE INSURANCE (PID INT, TIV_2015 INT, TIV_2016 INT, LAT INT, LON INT);
+TRUNCATE TABLE INSURANCE;
 INSERT ALL
-INTO insurance (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('1', '10', '5', '10', '10')
-INTO insurance (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('2', '20', '20', '20', '20')
-INTO insurance (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('3', '10', '30', '20', '20')
-INTO insurance (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('4', '10', '40', '40', '40')
+INTO INSURANCE (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('1', '10', '5', '10', '10')
+INTO INSURANCE (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('2', '20', '20', '20', '20')
+INTO INSURANCE (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('3', '10', '30', '20', '20')
+INTO INSURANCE (PID, TIV_2015, TIV_2016, LAT, LON) VALUES ('4', '10', '40', '40', '40')
 SELECT * FROM DUAL;
-SELECT * FROM insurance;
+SELECT * FROM INSURANCE;
 
 --1) Have the same TIV_2015 value as one or more other policyholders
 SELECT *
-FROM insurance
-WHERE TIV_2015 in 
+FROM INSURANCE
+WHERE TIV_2015 IN 
 				(SELECT TIV_2015
-				FROM insurance
+				FROM INSURANCE
 				GROUP BY TIV_2015
-				HAVING count(TIV_2015) >=2);
+				HAVING COUNT(TIV_2015) >=2);
 				
 --2) Are not located in the same city as any other policyholder
 SELECT *
-FROM insurance
-WHERE (LAT, LON) in 
-				(SELECT LAT, 
-						LON
-				FROM insurance
+FROM INSURANCE
+WHERE (LAT, LON) IN 
+				(SELECT LAT, LON
+				FROM INSURANCE
 				GROUP BY LAT, LON
-				HAVING count(LAT) = 1); --automatically count(LON) IS also 1
+				HAVING COUNT(LAT) = 1); --AUTOMATICALLY COUNT(LON) IS ALSO 1
 				
 				
 -- FINAL: JOIN 2 TABLES
 SELECT SUM(I1.TIV_2016) TIV_2016
 FROM
 (
-SELECT PID,
-TIV_2016
-FROM insurance
-WHERE TIV_2015 in 
-				(SELECT TIV_2015
-				FROM insurance
-				GROUP BY TIV_2015
-				HAVING count(TIV_2015) >=2)
+	SELECT PID,
+	TIV_2016
+	FROM INSURANCE
+	WHERE TIV_2015 IN 
+					(SELECT TIV_2015
+					FROM INSURANCE
+					GROUP BY TIV_2015
+					HAVING COUNT(TIV_2015) >=2)
 ) I1,
-(SELECT PID,
-TIV_2016
-FROM insurance
-WHERE (LAT, LON) in 
-				(SELECT LAT, 
-						LON
-				FROM insurance
-				GROUP BY LAT, LON
-				HAVING count(LAT) = 1)
+(
+	SELECT PID,
+	TIV_2016
+	FROM INSURANCE
+	WHERE (LAT, LON) IN 
+					(SELECT LAT, 
+							LON
+					FROM INSURANCE
+					GROUP BY LAT, LON
+					HAVING COUNT(LAT) = 1)
 ) I2
 WHERE I1.PID = I2.PID;

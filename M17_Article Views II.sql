@@ -8,7 +8,7 @@
 | viewer_id     | int     |
 | view_date     | date    |
 +---------------+---------+
-There is no primary key for this table, it may have duplicate rows.
+!!! There is no primary key for this table, it may have duplicate rows. !!!
 
 Each row of this table indicates that some viewer viewed an article (written by some author) on some date. 
 Note that equal author_id and viewer_id indicate the same person.
@@ -39,40 +39,51 @@ Result table:
 | 6    |
 +------+
 */
-DROP TABLE Views;
-CREATE TABLE Views (article_id int, author_id int, viewer_id int, view_date date);
-TRUNCATE TABLE Views;
+DROP TABLE VIEWS;
+CREATE TABLE VIEWS (ARTICLE_ID INT, AUTHOR_ID INT, VIEWER_ID INT, VIEW_DATE DATE);
+TRUNCATE TABLE VIEWS;
 INSERT ALL
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('1', '3', '5', TO_DATE('2019-08-01','YYYY-MM-DD'))
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('3', '4', '5', TO_DATE('2019-08-01','YYYY-MM-DD'))
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('1', '3', '6', TO_DATE('2019-08-02','YYYY-MM-DD'))
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('2', '7', '7', TO_DATE('2019-08-01','YYYY-MM-DD'))
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('2', '7', '6', TO_DATE('2019-08-02','YYYY-MM-DD'))
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('4', '7', '1', TO_DATE('2019-08-22','YYYY-MM-DD'))
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('3', '4', '4', TO_DATE('2019-08-21','YYYY-MM-DD'))
-INTO Views (article_id, author_id, viewer_id, view_date) VALUES ('3', '4', '4', TO_DATE('2019-08-21','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('1', '3', '5', TO_DATE('2019-08-01','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('3', '4', '5', TO_DATE('2019-08-01','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('1', '3', '6', TO_DATE('2019-08-02','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('2', '7', '7', TO_DATE('2019-08-01','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('2', '7', '6', TO_DATE('2019-08-02','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('4', '7', '1', TO_DATE('2019-07-22','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('3', '4', '4', TO_DATE('2019-07-21','YYYY-MM-DD'))
+INTO VIEWS (ARTICLE_ID, AUTHOR_ID, VIEWER_ID, VIEW_DATE) VALUES ('3', '4', '4', TO_DATE('2019-07-21','YYYY-MM-DD'))
 SELECT * FROM DUAL;
-SELECT * FROM Views;
+SELECT * FROM VIEWS;
 
--- it may have duplicate rows like viewer_id = 4
-SELECT COUNT(ARTICLE_ID),
-viewer_id,
-view_date
-FROM Views
-GROUP BY viewer_id, view_date;
+SELECT ARTICLE_ID,
+VIEWER_ID,
+VIEW_DATE,
+DENSE_RANK() OVER (PARTITION BY VIEWER_ID, VIEW_DATE ORDER BY ARTICLE_ID) DNR_ID --will consider the duplicate rows as same DNR_ID
+FROM VIEWS
+ORDER BY VIEWER_ID;
 
-SELECT DISTINCT article_id, 
-viewer_id, 
-view_date
-FROM views;
+--[METHOD 1]
+SELECT VIEWER_ID
+FROM
+(
+	SELECT ARTICLE_ID,
+	VIEWER_ID,
+	VIEW_DATE,
+	DENSE_RANK() OVER (PARTITION BY VIEWER_ID, VIEW_DATE ORDER BY ARTICLE_ID) DNR_ID --will consider the duplicate rows as same DNR_ID
+	FROM VIEWS
+	ORDER BY VIEWER_ID
+)
+WHERE DNR_ID > 1; --more than 1 article
 
-SELECT viewer_id
+
+--[METHOD 2]
+-- it may have duplicate rows like viewer_id=4 
+SELECT VIEWER_ID
 	FROM (
-	SELECT DISTINCT article_id, 
-	viewer_id, 
-	view_date
-	FROM views
+	SELECT DISTINCT ARTICLE_ID, --remove duplicate rows from the beginning
+	VIEWER_ID, 
+	VIEW_DATE
+	FROM VIEWS
 	)
-GROUP BY viewer_id, view_date
-HAVING count(ARTICLE_ID) >=2
-ORDER BY viewer_id;
+GROUP BY VIEWER_ID, VIEW_DATE
+HAVING COUNT(ARTICLE_ID) >=2
+ORDER BY VIEWER_ID;
