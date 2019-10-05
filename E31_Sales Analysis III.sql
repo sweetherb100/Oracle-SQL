@@ -72,8 +72,23 @@ SELECT * FROM DUAL;
 SELECT * FROM Product;*/
 
 
+--[METHOD 1]
+SELECT PRODUCT_ID,
+YEAR, 
+QUANTITY, 
+PRICE
+FROM
+(
+	SELECT PRODUCT_ID,
+	YEAR, 
+	QUANTITY, 
+	PRICE,
+	RANK() OVER (PARTITION BY PRODUCT_ID ORDER BY YEAR) RNK_YEAR
+	FROM SALES
+)
+WHERE RNK_YEAR=1;
 
---I am literally picking the first year so I don't need to worry about having multiple min
+--[METHOD 2]
 SELECT S.PRODUCT_ID,
 S.YEAR,
 S.QUANTITY,

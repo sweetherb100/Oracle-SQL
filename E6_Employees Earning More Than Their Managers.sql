@@ -19,9 +19,9 @@ For the above table, Joe is the only employee who earns more than his manager.
 +----------+
 */
 
+DROP TABLE EMPLOYEE;
 CREATE TABLE EMPLOYEE (ID INT, NAME VARCHAR(255), SALARY INT, MANAGERID INT);
 TRUNCATE TABLE EMPLOYEE;
-
 INSERT ALL
 INTO EMPLOYEE (ID, NAME, SALARY, MANAGERID) VALUES ('1', 'JOE', '70000', '3')
 INTO EMPLOYEE (ID, NAME, SALARY, MANAGERID) VALUES ('2', 'HENRY', '80000', '4')
@@ -32,12 +32,11 @@ SELECT * FROM EMPLOYEE;
 
 
 -- [METHOD 1]
-SELECT E.Name AS Employee
-FROM Employee E, Employee M
-WHERE 1=1
-AND E.ManagerId= M.Id --SELF JOIN
-AND E.Salary > M.Salary
-
+SELECT E.NAME AS EMPLOYEE
+FROM EMPLOYEE E, 
+EMPLOYEE M
+WHERE E.MANAGERID= M.ID --SELF JOIN
+AND E.SALARY > M.SALARY
 
 
 --[METHOD 2]
@@ -45,7 +44,7 @@ SELECT E.NAME AS EMPLOYEE
 FROM EMPLOYEE E
 WHERE EXISTS (
                SELECT 1
-                 FROM EMPLOYEE E1
-                WHERE E.MANAGERID = E1.ID
-                  AND E.SALARY > E1.SALARY
-              )
+                 FROM EMPLOYEE M
+                WHERE E.MANAGERID = M.ID
+                  AND E.SALARY > M.SALARY
+              );
