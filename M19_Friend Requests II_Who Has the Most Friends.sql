@@ -80,32 +80,6 @@ FROM
 WHERE RNK=1;
 
 
-
---yulkyu said no keunbon [tree without a root!] [non-rootted tree]
-SELECT --F.REQUESTER_ID,
-MAX(COUNT(F.REQUESTER_ID)) NUM
-FROM 
-(
-	SELECT REQUESTER_ID
-	FROM FACEBOOK
-	UNION ALL
-	SELECT ACCEPTER_ID
-	FROM FACEBOOK
-) F
-GROUP BY F.REQUESTER_ID;
-
-SELECT F.REQUESTER_ID,
-COUNT(F.REQUESTER_ID) NUM
-FROM 
-(
-	SELECT REQUESTER_ID
-	FROM FACEBOOK
-	UNION ALL
-	SELECT ACCEPTER_ID
-	FROM FACEBOOK
-) F
-GROUP BY F.REQUESTER_ID;
-
 --1) max(FF.num) not recommended
 --2) use 'order by' inside and then 'where rownum=1' [recommended by yulkyu]
 --3) 'order by' is done after the 'select', so I can use alias in order by!

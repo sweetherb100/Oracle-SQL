@@ -52,7 +52,7 @@ Result table:
 | 200        | 2011       | 15       | 9000  |
 +------------+------------+----------+-------+
 
-Result table: [yulkyu recommendation]
+Result table: [recommendation]
 +------------+------------+----------+-------+
 | product_id | first_year | quantity | price |
 +------------+------------+----------+-------+ 
@@ -119,7 +119,7 @@ WHERE P.PRODUCT_ID = S.PRODUCT_ID (+); --OUTER JOIN
 
 
 --[METHOD 2]
---yulkyu recommendation result
+-- recommendation result
 SELECT P.PRODUCT_ID, --THIS SHOULD BE P NOT PP (CAREFUL!)
 PP.YEAR,
 PP.QUANTITY,

@@ -61,8 +61,7 @@ FROM
 WHERE RNK_RATIO=1;
 
 
---[METHOD 2]YULKYU STYLE
---APPROACH: SELF-JOIN!
+--[METHOD 2] APPROACH: SELF-JOIN
 SELECT QUESTION_ID
   FROM (
         SELECT QUESTION_ID, 
@@ -75,11 +74,10 @@ SELECT QUESTION_ID
 				SURVEY A
 				WHERE S.ACTIONS      = 'SHOW'
 				AND A.ACTIONS      = 'ANSWER'      
-				/*1번: 굳이 OUTER를 안쓴 이유는, ANSWER에 값이 없다는건 아예 답을 한적이 없는 건이니까 빼도 될거 같기 때문*/
+				/*Didnt use Outer left join: if there is no 'answer', it is not answered */
 				AND S.QUESTION_ID = A.QUESTION_ID
 				GROUP BY S.QUESTION_ID
 				ORDER BY SURVEY_LOG DESC
                )
        )
- WHERE RNK  = 1; -- 중복 1위를 다 보고 싶을때
--- WHERE RNUM = 1 -- 중복이어도 1위는 하나만 보고 싶을때
+ WHERE RNK  = 1; -- when I want to see multiple rank 1
