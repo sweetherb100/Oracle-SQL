@@ -38,8 +38,8 @@ If there is no requests at all, you should return 0.00 as the accept_rate.
 Explanation: There are 4 unique accepted requests, and there are 5 requests in total. So the rate is 0.80.
 
 Follow-up:
-Can you write a query to return the accept rate but for every month?
-How about the cumulative accept rate for every day?*/
+Can you write a query to return the 'accept rate' but for every month?
+How about the cumulative 'accept rate' for every day?*/
 
 DROP TABLE FRIEND_REQUEST;
 CREATE TABLE FRIEND_REQUEST (SENDER_ID INT, SEND_TO_ID INT, REQUEST_DATE DATE);
@@ -65,13 +65,18 @@ SELECT * FROM DUAL;
 SELECT * FROM REQUEST_ACCEPTED;
 
 -- Question1: Write a query to find the overall acceptance rate of requests rounded to 2 decimals
+--[reference]
+SELECT COUNT(1) AS ACCEPTED
+FROM REQUEST_ACCEPTED A
+GROUP BY A.REQUESTER_ID, A.ACCEPTER_ID
+     
 ----[method 1]
 SELECT ROUND(A.ACCEPTED / R.REQUESTED, 2)
 FROM 
 	(
     SELECT COUNT(COUNT(1)) AS ACCEPTED
       FROM REQUEST_ACCEPTED A
-     GROUP BY A.REQUESTER_ID, A.ACCEPTER_ID
+     GROUP BY A.REQUESTER_ID, A.ACCEPTER_ID --plays a role as distinct (request_id, accepter_id)
    ) A
  , (
     SELECT COUNT(COUNT(1)) AS REQUESTED
@@ -92,29 +97,7 @@ SELECT CASE WHEN R.REQUESTED = 0 THEN ROUND(0, 2)
         SELECT COUNT(COUNT(1)) AS REQUESTED
           FROM FRIEND_REQUEST R
          GROUP BY R.SENDER_ID, R.SEND_TO_ID
-       ) R;
-       
---[method 3] Not really recommended because there are too many sub-queries
-SELECT AA.CNT_ACCEPT / RR.CNT_REQUEST AS ACCEPT_RATE
-FROM
-(
-SELECT COUNT(A.REQUESTER_ID) CNT_ACCEPT
-FROM
-	(
-		SELECT DISTINCT REQUESTER_ID, 
-		ACCEPTER_ID
-		FROM REQUEST_ACCEPTED
-	) A
-) AA,
-(
-	SELECT COUNT(R.SENDER_ID) CNT_REQUEST
-	FROM
-	(
-		SELECT DISTINCT SENDER_ID, 
-		SEND_TO_ID
-		FROM FRIEND_REQUEST
-	) R
-) RR
+       ) R;       
       
 
 --WRONG! result comes out as 20. I think it is because there is table R as well
@@ -132,19 +115,19 @@ FROM
 ) R;
 
 
---Question2: Can you write a query to return the accept rate but for every month?
+--Question2: Can you write a query to return the 'accept rate' but for every month?
 SELECT NVL(A.CNT_ACCEPT,0)/(R.CNT_REQUEST) AS ACCEPT_RATE, 
 R.REQUEST_MONTH
 FROM
 (
-	SELECT COUNT(1) CNT_REQUEST,
+	SELECT COUNT(1) CNT_REQUEST, --plays a role as COUNT(COUNT(1))
 	REQUEST_MONTH
 	FROM
 		(
 		SELECT COUNT(1) CNT_REQUEST,
 		TO_CHAR(REQUEST_DATE,'YYYY-MM') REQUEST_MONTH
 		FROM FRIEND_REQUEST
-		GROUP BY SENDER_ID, SEND_TO_ID, TO_CHAR(REQUEST_DATE,'YYYY-MM')
+		GROUP BY SENDER_ID, SEND_TO_ID, TO_CHAR(REQUEST_DATE,'YYYY-MM') --plays a role as distinct (request_id, accepter_id, request_date)
 		)
 	GROUP BY REQUEST_MONTH
 ) R,
@@ -162,4 +145,37 @@ FROM
 ) A 
 WHERE R.REQUEST_MONTH = A.ACCEPT_MONTH;
 
---Question3: How about the cumulative accept rate for every day?*/
+--Question3: How about the cumulative 'accept rate' for every day?*/
+--for now, this is wrong...
+--it seems that the question is unsolvable...
+SELECT NVL(A.CNT_ACCEPT,0)/NVL(R.CNT_REQUEST) AS ACCEPT_RATE, 
+A.ACCEPT_DAY
+FROM
+(
+	SELECT COUNT(1) CNT_REQUEST, --plays a role as COUNT(COUNT(1))
+	REQUEST_DAY
+	FROM
+		(
+		SELECT COUNT(1) CNT_REQUEST,
+		TO_CHAR(REQUEST_DATE,'YYYY-MM-DD') REQUEST_DAY
+		FROM FRIEND_REQUEST
+		GROUP BY SENDER_ID, SEND_TO_ID, TO_CHAR(REQUEST_DATE,'YYYY-MM-DD') --plays a role as distinct (request_id, accepter_id, request_date)
+		)
+	GROUP BY REQUEST_DAY
+	ORDER BY REQUEST_DAY
+) R,
+(
+	SELECT COUNT(1) CNT_ACCEPT,
+	ACCEPT_DAY
+	FROM
+		(
+		SELECT COUNT(1) CNT_ACCEPT,
+		TO_CHAR(ACCEPT_DATE,'YYYY-MM-DD') ACCEPT_DAY
+		FROM REQUEST_ACCEPTED
+		GROUP BY REQUESTER_ID, ACCEPTER_ID, TO_CHAR(ACCEPT_DATE,'YYYY-MM-DD')
+		)
+	GROUP BY ACCEPT_DAY
+	ORDER BY ACCEPT_DAY
+) A 
+WHERE A.ACCEPT_DAY = R.REQUEST_DAY(+)
+ORDER BY A.ACCEPT_DAY;
