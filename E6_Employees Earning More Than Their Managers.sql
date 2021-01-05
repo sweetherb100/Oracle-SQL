@@ -31,20 +31,38 @@ SELECT * FROM DUAL;
 SELECT * FROM EMPLOYEE;
 
 
+SELECT * 
+FROM EMPLOYEE E, 
+EMPLOYEE M
+WHERE E.MANAGERID= M.ID; --SELF JOIN
+
+
+
 -- [METHOD 1]
 SELECT E.NAME AS EMPLOYEE
 FROM EMPLOYEE E, 
 EMPLOYEE M
 WHERE E.MANAGERID= M.ID --SELF JOIN
-AND E.SALARY > M.SALARY
+AND E.SALARY > M.SALARY;
 
 
 --[METHOD 2]
 SELECT E.NAME AS EMPLOYEE
 FROM EMPLOYEE E
 WHERE EXISTS (
-               SELECT 1
-                 FROM EMPLOYEE M
-                WHERE E.MANAGERID = M.ID
-                  AND E.SALARY > M.SALARY
+               SELECT 1 --* is also possible
+               FROM EMPLOYEE M
+               WHERE E.MANAGERID = M.ID
+               AND E.SALARY > M.SALARY
+              );
+
+
+--[METHOD 3]
+SELECT E.NAME AS EMPLOYEE
+FROM EMPLOYEE E
+WHERE E.NAME IN (
+               SELECT E.NAME
+               FROM EMPLOYEE M
+               WHERE E.MANAGERID = M.ID
+               AND E.SALARY > M.SALARY
               );
